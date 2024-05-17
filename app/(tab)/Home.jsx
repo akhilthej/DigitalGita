@@ -1,21 +1,21 @@
-import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import { Redirect, router } from 'expo-router'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { StatusBar } from 'expo-status-bar';
+import { StyleSheet, Text, View } from 'react-native';
+import ImageSlider from '../../components/ImageSlider';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
-import {images} from '../../constants'
-import { StatusBar } from 'expo-status-bar'
 
-const Home = () => {
+export default function App() {
   return (
-    <SafeAreaView>
-     <ScrollView>
-      <Text>Home</Text>
-      </ScrollView>
-      
-      <StatusBar backgroundColor="#000000" style="light" />
+   
+    <SafeAreaView className='bg-black'>
+     <ImageSlider /> 
+
+
+
+     <StatusBar backgroundColor="#000000" style="light" />
     </SafeAreaView>
-  )
+
+  );
 }
 
-export default Home
+

@@ -1,28 +1,26 @@
 import { StatusBar } from "expo-status-bar";
 import { Redirect, Tabs } from "expo-router";
 import { Image, Text, View } from "react-native";
-
 import { icons } from "../../constants";
 
-const TabIcon = ({ icon, color, name, focused }) => {
+const TabIcon = ({ icon, color, name, focused, iconSize = 20, nameSize = 10 }) => {
   return (
-    <View className="flex items-center justify-center gap-2">
+    <View className="flex items-center justify-center gap-1">
       <Image
         source={icon}
         resizeMode="contain"
         tintColor={color}
-        className="w-6 h-6"
+        style={{ width: iconSize, height: iconSize }}
       />
       <Text
         className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}
-        style={{ color: color }}
+        style={{ color: color, fontSize: nameSize }}
       >
         {name}
       </Text>
     </View>
   );
 };
-
 
 const TabLayout = () => {
   return (
@@ -34,7 +32,7 @@ const TabLayout = () => {
           tabBarShowLabel: false,
           tabBarStyle: {
             backgroundColor: "#161622",
-            height: 60,
+            height: 55,
           },
         }}
       >
@@ -45,7 +43,7 @@ const TabLayout = () => {
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.bookmark}
+                icon={icons.home}
                 color={color}
                 name="Home"
                 focused={focused}
@@ -60,7 +58,7 @@ const TabLayout = () => {
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.pharma}
+                icon={icons.services}
                 color={color}
                 name="Services"
                 focused={focused}
@@ -68,31 +66,14 @@ const TabLayout = () => {
             ),
           }}
         />
-
-        <Tabs.Screen
-          name="DealsOffers"
-          options={{
-            title: "DealsOffers",
-            headerShown: false,
-            tabBarIcon: ({ color, focused }) => (
-              <TabIcon
-                icon={icons.home}
-                color={color}
-                name="DealsOffers"
-                focused={focused}
-              />
-            ),
-          }}
-        />
-
-<Tabs.Screen
+         <Tabs.Screen
           name="Wiki"
           options={{
             title: "Wiki",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
-                icon={icons.heart}
+                icon={icons.book}
                 color={color}
                 name="Wiki"
                 focused={focused}
@@ -100,8 +81,22 @@ const TabLayout = () => {
             ),
           }}
         />
-        
-        <Tabs.Screen
+          <Tabs.Screen
+          name="DealsOffers"
+          options={{
+            title: "DealsOffers",
+            headerShown: false,
+            tabBarIcon: ({ color, focused }) => (
+              <TabIcon
+                icon={icons.deals}
+                color={color}
+                name="DealsOffers"
+                focused={focused}
+              />
+            ),
+          }}
+        />
+          <Tabs.Screen
           name="Profile"
           options={{
             title: "Profile",
@@ -117,7 +112,6 @@ const TabLayout = () => {
           }}
         />
       </Tabs>
-
     </>
   );
 };

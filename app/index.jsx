@@ -47,12 +47,6 @@ const index = () => {
               <Text className='text-[13px] w-[150px] text-center font-bold text-white p-5'>
                 Join Now
               </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity onPress={() => router.push("/Home")} className='flex-row items-center bg-black mt-10 rounded-2xl'>
-              <Text className='text-[13px] w-[150px] text-center font-bold text-white p-5'>
-                Get Started
-              </Text>
               <Icon
                 name="log-in-outline"
                 size={30}
@@ -61,6 +55,7 @@ const index = () => {
               />
             </TouchableOpacity>
 
+           
 
            
 

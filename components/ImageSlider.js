@@ -42,7 +42,8 @@ export default function AppCarousel() {
                 data={list}
                 autoPlay={true}
                 pagingEnabled={pagingEnabled}
-                scrollAnimationDuration={1000}
+                scrollAnimationDuration={3000}
+                
                 renderItem={({ item }) => (
                     <View style={styles.CarouselItem}>
                         <Image style={styles.img} source={item.image} />

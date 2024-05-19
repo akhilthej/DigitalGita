@@ -6,7 +6,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { images } from '../../constants';
-import { useNavigation } from '@react-navigation/native'; // Assuming you're using React Navigation
+import { useNavigation } from '@react-navigation/native';
 
 const Signin = () => {
   const [email, setEmail] = useState('');
@@ -22,9 +22,15 @@ const Signin = () => {
       );
 
       console.log('Signin Success:', response.data);
-
       
-      navigation.navigate('(tab)'); 
+      // Assuming response.data contains success information
+      if (response.data.success) {
+        // If signin successful, navigate to home or dashboard screen
+        navigation.navigate('(tab)'); // Change 'Home' to your desired screen name
+      } else {
+        // If signin failed, display error message
+        console.error('Signin Error:', response.data.message);
+      }
     } catch (error) {
       console.error('Signin Error:', error.message);
     }

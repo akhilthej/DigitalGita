@@ -1,9 +1,9 @@
-import { StatusBar } from "expo-status-bar";
-import { Redirect, Tabs } from "expo-router";
+
+import {  Tabs } from "expo-router";
 import { Image, Text, View } from "react-native";
 import { icons } from "../../constants";
 
-const TabIcon = ({ icon, color, name, focused, iconSize = 20, nameSize = 10 }) => {
+const TabIcon = ({ icon, color, name, iconSize = 20, nameSize = 10 }) => {
   return (
     <View className="flex items-center justify-center gap-1">
       <Image
@@ -13,7 +13,7 @@ const TabIcon = ({ icon, color, name, focused, iconSize = 20, nameSize = 10 }) =
         style={{ width: iconSize, height: iconSize }}
       />
       <Text
-        className={`${focused ? "font-psemibold" : "font-pregular"} text-xs`}
+        className='text-xs'
         style={{ color: color, fontSize: nameSize }}
       >
         {name}

@@ -19,8 +19,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.cyberspacedigital.digitalgita"
+      }
     },
     "web": {
       "bundler": "metro",
@@ -32,6 +31,14 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "0d6b5d32-dac4-4e92-a9cd-02d10b3dddbc"
+      }
     }
   }
 }

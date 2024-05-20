@@ -3,130 +3,104 @@ import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
-import axios from 'axios';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { images } from '../../constants';
-import { useNavigation } from '@react-navigation/native';
+import * as WebBrowser from "expo-web-browser";
+import { useOAuth } from "@clerk/clerk-expo";
+import { useWarmUpBrowser } from "../../hooks/useWarmUpBrowser";
+
+WebBrowser.maybeCompleteAuthSession();
 
 const Signin = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigation = useNavigation();
 
-  const handleSignin = async () => {
+  useWarmUpBrowser();
+
+  const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+
+
+  const onPress = React.useCallback(async () => {
     try {
-      const response = await axios.post(
-        'https://digitalgita.cyberspacedigital.in/api/signin.php',
-        { email, password },
-        { headers: { 'Content-Type': 'application/json' } }
-      );
+      const { createdSessionId, signIn, signUp, setActive } =
+        await startOAuthFlow();
 
-      console.log('Signin Success:', response.data);
-      
-      // Assuming response.data contains success information
-      if (response.data.success) {
-        // If signin successful, navigate to home or dashboard screen
-        navigation.navigate('(tab)'); // Change 'Home' to your desired screen name
+      if (createdSessionId) {
+        setActive({ session: createdSessionId });
       } else {
-        // If signin failed, display error message
-        console.error('Signin Error:', response.data.message);
+        // Use signIn or signUp for next steps such as MFA
       }
-    } catch (error) {
-      console.error('Signin Error:', error.message);
+    } catch (err) {
+      console.error("OAuth error", err);
     }
-  };
+  }, []);
+
 
   return (
     <LinearGradient
-      colors={['#f9faf8',  '#dbe9db']}
-      style={{ flex: 1 }}
-    >
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: 'center',
-            paddingHorizontal: 20
-          }}
-        >
-          <View>
-            <Image
-              source={images.welcomescreenlogo}
-              style={styles.logo}
-              resizeMode="contain"
-            />
-            <Text style={styles.title}>
-              Sign In
+    colors={['#f9faf8',  '#dbe9db']} // Set your gradient colors here
+    style={{ flex: 1 }}
+  >
+    <SafeAreaView className='h-full'>
+      <ScrollView
+        contentContainerStyle={{
+          height: "100%",
+        }}
+      >
+        <View className="w-full flex justify-center items-center h-[85vh] px-4">
+        
+
+          <Image
+            source={images.welcomescreenlogo}
+            className="max-w-[280px] w-full h-[298px]"
+            resizeMode="contain"
+          />
+
+          <View className="relative mt-5">
+            <Text className="text-[18px]  text-black font-bold text-center">
+              Let's Start
             </Text>
-            <TextInput
-              placeholder="Email Address"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              style={styles.input}
-            />
-            <TextInput
-              placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              style={styles.input}
-            />
-            <TouchableOpacity onPress={handleSignin} style={styles.signupButton}>
-              <Text style={styles.signupText}>
-                Sign In
-              </Text>
-              <Icon
-                name="log-in-outline"
-                size={30}
-                color='white'
-                style={{ marginLeft: 'auto', marginRight: 20 }}
-              />
-            </TouchableOpacity>
+            <Text className="text-[24px]  text-black font-bold text-center">
+              Building your Brand
+            </Text>
           </View>
-        </ScrollView>
-        <StatusBar backgroundColor="#000000" style="light" />
-      </SafeAreaView>
-    </LinearGradient>
+
+          <Text className="text-xs  text-gray-800 mt-2 text-center">
+            A Knowledge place for all your Digital Needs. {"\n"}
+          </Text>
+
+          <TouchableOpacity onPress={onPress} className='flex-row items-center bg-teal-900 mt-10 rounded-2xl'>
+          <Icon
+              name="logo-google"
+              size={30}
+              color='white'
+              style={{ marginLeft: 'auto', marginLeft: 20 }}
+            />
+             <Text className='text-[13px] w-[250px] font-bold text-white p-5'>
+              Signin with Google
+            </Text>
+            <Icon
+              name="log-in-outline"
+              size={30}
+              color='white'
+              style={{ marginLeft: 'auto', marginRight: 20 }}
+            />
+          </TouchableOpacity>
+
+         
+
+         
+
+        </View>
+      </ScrollView>
+
+      <StatusBar backgroundColor="#000000" style="light" />
+
+      <Text className="text-xs font-light text-gray-700 mt-2 text-center pb-10">
+        www.digitalgita.com | www.cyberspacedigital.in {"\n"}
+        &copy; 2024 Cyber Space Digital. All rights reserved.
+      </Text>
+    </SafeAreaView>
+  </LinearGradient>
   );
 };
-
-const styles = StyleSheet.create({
-  logo: {
-    maxWidth: 280,
-    width: '100%',
-    height: 80,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  input: {
-    width: '100%',
-    padding: 10,
-    marginVertical: 5,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-  },
-  signupButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'black',
-    marginTop: 10,
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-  },
-  signupText: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    width: 150,
-    textAlign: 'center',
-    color: 'white',
-  },
-});
 
 export default Signin;

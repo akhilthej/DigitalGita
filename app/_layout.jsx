@@ -1,54 +1,55 @@
+import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
+import { Slot, useRouter, useSegments } from 'expo-router';
+import { useEffect } from 'react';
+import * as SecureStore from 'expo-secure-store';
 
-import { useEffect } from "react";
-import { Slot , Stack , SplashScreen } from 'expo-router'
+const CLERK_PUBLISHABLE_KEY = 'pk_test_cG9saXRlLXN0dWQtNjkuY2xlcmsuYWNjb3VudHMuZGV2JA';
 
-import {useFonts} from 'expo-font'// Fonts
-
-// Prevent the splash screen from auto-hiding before asset loading is complete.
-SplashScreen.preventAutoHideAsync();
-
-const RootLayout = () => {
-  const [fontsLoaded, error] = useFonts({
-    "Poppins-Black": require("../assets/fonts/Poppins-Black.ttf"),
-    "Poppins-Bold": require("../assets/fonts/Poppins-Bold.ttf"),
-    "Poppins-ExtraBold": require("../assets/fonts/Poppins-ExtraBold.ttf"),
-    "Poppins-ExtraLight": require("../assets/fonts/Poppins-ExtraLight.ttf"),
-    "Poppins-Light": require("../assets/fonts/Poppins-Light.ttf"),
-    "Poppins-Medium": require("../assets/fonts/Poppins-Medium.ttf"),
-    "Poppins-Regular": require("../assets/fonts/Poppins-Regular.ttf"),
-    "Poppins-SemiBold": require("../assets/fonts/Poppins-SemiBold.ttf"),
-    "Poppins-Thin": require("../assets/fonts/Poppins-Thin.ttf"),
-  });
-
+const InitialLayout = () => {
+  const { isLoaded, isSignedIn } = useAuth();
+  const segments = useSegments();
+  const router = useRouter();
 
   useEffect(() => {
-    if (error) throw error;
+    if (!isLoaded) return;
 
-    if (fontsLoaded) {
-      SplashScreen.hideAsync();
+    const inTabsGroup = segments[0] === '(auth)';
+
+    console.log('User changed: ', isSignedIn);
+
+    if (isSignedIn && !inTabsGroup) {
+      router.replace('/Home');
+    } else if (!isSignedIn) {
+      router.replace('/signin');
     }
-  }, [fontsLoaded, error]);
+  }, [isSignedIn]);
 
-  if (!fontsLoaded) {
-    return null;
-  }
+  return <Slot />;
+};
 
-  if (!fontsLoaded && !error) {
-    return null;
-  }
+const tokenCache = {
+  async getToken(key) {
+    try {
+      return SecureStore.getItemAsync(key);
+    } catch (err) {
+      return null;
+    }
+  },
+  async saveToken(key, value) {
+    try {
+      return SecureStore.setItemAsync(key, value);
+    } catch (err) {
+      return;
+    }
+  },
+};
 
-
+const RootLayout = () => {
   return (
-    <Stack >
-    
-     <Stack.Screen name="index" options={{headerShown: false}} />
-    <Stack.Screen name="(tab)" options={{headerShown: false}} />
-    <Stack.Screen name="(auth)" options={{headerShown: false}} />
+    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY} tokenCache={tokenCache}>
+      <InitialLayout />
+    </ClerkProvider>
+  );
+};
 
-   
-   
-  </Stack>
-  )
-}
-
-export default RootLayout
+export default RootLayout;

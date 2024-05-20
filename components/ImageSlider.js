@@ -1,11 +1,12 @@
-import { Dimensions, StyleSheet, View, Image } from 'react-native';
+import { Dimensions, View, Image } from 'react-native';
 import React, { useState } from 'react';
 import Carousel from 'react-native-reanimated-carousel';
+import { styled } from 'nativewind';
 
-export default function AppCarousel() {
+const ImageSlider = () => {
     const [pagingEnabled, setPagingEnabled] = useState(true);
     const width = Dimensions.get('window').width;
-    
+
     const list = [
         {
             id: 1,
@@ -34,36 +35,26 @@ export default function AppCarousel() {
         }
     ];
 
+    const StyledView = styled(View);
+    const StyledImage = styled(Image);
+
     return (
-        <View style={{ flex: 1 }}>
+        <StyledView className="flex-1 mb-4">
             <Carousel
                 width={width}
-                height={width / 2}
+                height={width / 3}
                 data={list}
                 autoPlay={true}
                 pagingEnabled={pagingEnabled}
                 scrollAnimationDuration={3000}
-                
                 renderItem={({ item }) => (
-                    <View style={styles.CarouselItem}>
-                        <Image style={styles.img} source={item.image} />
-                    </View>
+                    <StyledView className="flex-1 justify-center overflow-hidden m-2">
+                        <StyledImage className="w-full h-full" source={item.image} style={{ resizeMode: 'cover' }} />
+                    </StyledView>
                 )}
             />
-        </View>
+        </StyledView>
     );
-}
+};
 
-const styles = StyleSheet.create({
-    CarouselItem: {
-        flex: 1,
-        justifyContent: 'center',
-        overflow: 'hidden',
-        margin: 20,  // Adding margin to all four sides
-    },
-    img: {
-        width: '100%',
-        height: '100%',
-        resizeMode: 'cover'  // Ensuring the image covers the container
-    }
-});
+export default ImageSlider;

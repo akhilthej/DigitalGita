@@ -6,7 +6,6 @@ import React from 'react';
 import { useUser, useAuth } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { StatusBar } from 'expo-status-bar';
-import { images } from '../../constants';
 
 
 const Profile = () => {
@@ -33,7 +32,7 @@ const Profile = () => {
     <SafeAreaView className='h-full'>
       <ScrollView>
 
-        <View className="w-full flex justify-center items-center px-4 mt-14">
+        <View className="w-full flex justify-center items-center px-4">
            <View className="flex flex-col items-center w-full justify-center bg-teal-800 rounded-xl p-4">
             <Image 
               source={{ uri: user?.imageUrl }} 

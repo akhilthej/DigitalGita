@@ -12,7 +12,7 @@ const Header = () => {
   };
 
   return (
-    <View className="flex flex-row py-3 pt-14 px-6 items-center gap-4 bg-teal-800">
+    <View className="flex flex-row py-3 px-6 items-center bg-teal-800">
       <TouchableOpacity onPress={handleProfileNavigation}>
         <Image
           source={{ uri: user?.imageUrl }}
@@ -20,7 +20,7 @@ const Header = () => {
         />
       </TouchableOpacity>
 
-      <View>
+      <View className='pl-2'>
         <TouchableOpacity onPress={handleProfileNavigation}>
           <Text className="text-[13px] text-white">Welcome</Text>
           <Text className="text-[16px] font-bold text-white">{user?.fullName}</Text>

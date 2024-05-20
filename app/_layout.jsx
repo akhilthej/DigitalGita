@@ -20,7 +20,7 @@ const InitialLayout = () => {
     if (isSignedIn && !inTabsGroup) {
       router.replace('/Home');
     } else if (!isSignedIn) {
-      router.replace('/signin');
+      router.replace('/OnboardingScreen');
     }
   }, [isSignedIn]);
 

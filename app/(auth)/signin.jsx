@@ -3,104 +3,108 @@ import { Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { images } from '../../constants';
+import { useSignIn } from "@clerk/clerk-expo";
 import * as WebBrowser from "expo-web-browser";
-import { useOAuth } from "@clerk/clerk-expo";
+import { Link, useNavigation } from 'expo-router'; // Import useNavigation hook
 import { useWarmUpBrowser } from "../../hooks/useWarmUpBrowser";
 
 WebBrowser.maybeCompleteAuthSession();
 
-const Signin = () => {
-
+const SignIn = () => {
   useWarmUpBrowser();
+  const navigation = useNavigation(); // Use useNavigation hook
 
-  const { startOAuthFlow } = useOAuth({ strategy: "oauth_google" });
+  const { signIn, setActive, isLoaded } = useSignIn();
+  const [emailAddress, setEmailAddress] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState(null);
 
-
-  const onPress = React.useCallback(async () => {
-    try {
-      const { createdSessionId, signIn, signUp, setActive } =
-        await startOAuthFlow();
-
-      if (createdSessionId) {
-        setActive({ session: createdSessionId });
-      } else {
-        // Use signIn or signUp for next steps such as MFA
-      }
-    } catch (err) {
-      console.error("OAuth error", err);
+  const onSignInPress = async () => {
+    if (!isLoaded) {
+      return;
     }
-  }, []);
 
+    try {
+      const completeSignIn = await signIn.create({
+        identifier: emailAddress,
+        password,
+      });
+
+      await setActive({ session: completeSignIn.createdSessionId });
+
+      // Navigate to Home screen upon successful sign-in
+      navigation.navigate('(tab)');
+    } catch (err) {
+      console.error("Sign-in error", err);
+      setError("Sign-in failed. Please check your credentials and try again.");
+    }
+  };
 
   return (
     <LinearGradient
-    colors={['#f9faf8',  '#dbe9db']} // Set your gradient colors here
-    style={{ flex: 1 }}
-  >
-    <SafeAreaView className='h-full'>
-      <ScrollView
-        contentContainerStyle={{
-          height: "100%",
-        }}
-      >
-        <View className="w-full flex justify-center items-center h-[85vh] px-4">
-        
+      colors={['#f9faf8', '#dbe9db']}
+      style={{ flex: 1 }}
+    >
+      <SafeAreaView className='h-full'>
+        <ScrollView contentContainerStyle={{ height: "100%" }}>
+          <View className="w-full flex justify-center items-center h-[85vh] px-4">
+            <Image
+              source={images.welcomescreenlogo}
+              className="max-w-[280px] w-full h-[298px]"
+              resizeMode="contain"
+            />
 
-          <Image
-            source={images.welcomescreenlogo}
-            className="max-w-[280px] w-full h-[298px]"
-            resizeMode="contain"
-          />
+            <View className="relative mt-5">
+              <Text className="text-[18px] text-black font-bold text-center">
+                Welcome Back
+              </Text>
+              <Text className="text-[24px] text-black font-bold text-center">
+                Sign in to Your Account
+              </Text>
+            </View>
 
-          <View className="relative mt-5">
-            <Text className="text-[18px]  text-black font-bold text-center">
-              Let's Start
+            <Text className="text-xs text-gray-800 mt-2 text-center">
+              A Knowledge place for all your Digital Needs. {"\n"}
             </Text>
-            <Text className="text-[24px]  text-black font-bold text-center">
-              Building your Brand
-            </Text>
+
+            <View className="w-full mt-5">
+              <TextInput
+                autoCapitalize="none"
+                value={emailAddress}
+                placeholder="Email"
+                onChangeText={setEmailAddress}
+                className="border-b border-gray-400 py-2"
+              />
+              <TextInput
+                value={password}
+                placeholder="Password"
+                secureTextEntry={true}
+                onChangeText={setPassword}
+                className="border-b border-gray-400 py-2"
+              />
+              {error && <Text className="text-red-500 mt-2 text-center">{error}</Text>}
+              <TouchableOpacity
+                onPress={onSignInPress}
+                className='flex-row items-center bg-teal-900 mt-10 rounded-2xl'
+              >
+                <Text className='text-[13px] w-full font-bold text-white p-5 text-center'>
+                  Sign In
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
+        </ScrollView>
 
-          <Text className="text-xs  text-gray-800 mt-2 text-center">
-            A Knowledge place for all your Digital Needs. {"\n"}
-          </Text>
+        <StatusBar backgroundColor="#000000" style="light" />
 
-          <TouchableOpacity onPress={onPress} className='flex-row items-center bg-teal-900 mt-10 rounded-2xl'>
-          <Icon
-              name="logo-google"
-              size={30}
-              color='white'
-              style={{ marginLeft: 'auto', marginLeft: 20 }}
-            />
-             <Text className='text-[13px] w-[250px] font-bold text-white p-5'>
-              Signin with Google
-            </Text>
-            <Icon
-              name="log-in-outline"
-              size={30}
-              color='white'
-              style={{ marginLeft: 'auto', marginRight: 20 }}
-            />
-          </TouchableOpacity>
-
-         
-
-         
-
-        </View>
-      </ScrollView>
-
-      <StatusBar backgroundColor="#000000" style="light" />
-
-      <Text className="text-xs font-light text-gray-700 mt-2 text-center pb-10">
-        www.digitalgita.com | www.cyberspacedigital.in {"\n"}
-        &copy; 2024 Cyber Space Digital. All rights reserved.
-      </Text>
-    </SafeAreaView>
-  </LinearGradient>
+        <Text className="text-xs font-light text-gray-700 mt-2 text-center pb-10">
+          www.digitalgita.com | www.cyberspacedigital.in {"\n"}
+          &copy; 2024 Cyber Space Digital. All rights reserved.
+        </Text>
+      </SafeAreaView>
+    </LinearGradient>
   );
 };
 
-export default Signin;
+export default SignIn;

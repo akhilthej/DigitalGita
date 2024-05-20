@@ -1,36 +1,64 @@
 import React, { useState } from 'react';
-import {
-  Image, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View,
-} from 'react-native';
+import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
-import axios from 'axios';
-import Icon from 'react-native-vector-icons/Ionicons';
 import { images } from '../../constants';
-import { useRouter } from 'expo-router';
+import * as WebBrowser from "expo-web-browser";
+import { useSignUp } from "@clerk/clerk-expo";
+import { useWarmUpBrowser } from "../../hooks/useWarmUpBrowser";
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation
+
+WebBrowser.maybeCompleteAuthSession();
 
 const Signup = () => {
-  const router = useRouter();
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [phone, setPhone] = useState('');
+  useWarmUpBrowser();
+  const navigation = useNavigation(); // Access navigation object
 
-  const handleSignup = async () => {
+  const { isLoaded, signUp, setActive } = useSignUp();
+
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [emailAddress, setEmailAddress] = useState("");
+  const [password, setPassword] = useState("");
+  const [pendingVerification, setPendingVerification] = useState(false);
+  const [code, setCode] = useState("");
+
+  const onSignUpPress = async () => {
+    if (!isLoaded) {
+      return;
+    }
+  
     try {
-      console.log('Signup Data:', { name, email, password, phone });
+      await signUp.create({
+        firstName,
+        lastName,
+        emailAddress,
+        password,
+      });
+  
+      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      setPendingVerification(true);
+    } catch (err) {
+      console.error("Sign-up error", err);
+    }
+  };
+  
+  const onPressVerify = async () => {
+    if (!isLoaded) {
+      return;
+    }
 
-      const response = await axios.post(
-        'https://digitalgita.cyberspacedigital.in/api/signup.php',
-        { name, email, password, phone },
-        { headers: { 'Content-Type': 'application/json' } },
-      );
+    try {
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
+        code,
+      });
 
-      console.log('Signup Success:', response.data);
-      router.push('Login');
-    } catch (error) {
-      console.error('Signup Error:', error.message);
+      await setActive({ session: completeSignUp.createdSessionId });
+      // Navigate to a specific tab after successful verification
+      navigation.navigate('(tab)'); // Replace 'YourTabName' with the name of your tab
+    } catch (err) {
+      console.error("Verification error", err);
     }
   };
 
@@ -39,128 +67,103 @@ const Signup = () => {
       colors={['#f9faf8', '#dbe9db']}
       style={{ flex: 1 }}
     >
-      <SafeAreaView style={{ flex: 1 }}>
-        <ScrollView
-          contentContainerStyle={{
-            flexGrow: 1,
-            justifyContent: 'center',
-            paddingHorizontal: 20,
-          }}
-        >
-          <View>
+      <SafeAreaView className='h-full'>
+        <ScrollView contentContainerStyle={{ height: "100%" }}>
+          <View className="w-full flex justify-center items-center h-[85vh] px-4">
             <Image
               source={images.welcomescreenlogo}
-              style={styles.logo}
+              className="max-w-[280px] w-full h-[298px]"
               resizeMode="contain"
             />
-            <Text style={styles.title}>
-              Join Now
+
+            <View className="relative mt-5">
+              <Text className="text-[18px] text-black font-bold text-center">
+                Let's Start
+              </Text>
+              <Text className="text-[24px] text-black font-bold text-center">
+                Building your Brand
+              </Text>
+            </View>
+
+            <Text className="text-xs text-gray-800 mt-2 text-center">
+              A Knowledge place for all your Digital Needs. {"\n"}
             </Text>
-            <TextInput
-              placeholder="Name"
-              value={name}
-              onChangeText={setName}
-              style={styles.input}
-            />
-            <TextInput
-              placeholder="Email Address"
-              value={email}
-              onChangeText={setEmail}
-              keyboardType="email-address"
-              style={styles.input}
-            />
-            <TextInput
-              placeholder="Password"
-              value={password}
-              onChangeText={setPassword}
-              secureTextEntry
-              style={styles.input}
-            />
-            <TextInput
-              placeholder="Phone Number"
-              value={phone}
-              onChangeText={setPhone}
-              keyboardType="phone-pad"
-              style={styles.input}
-            />
-            <TouchableOpacity onPress={handleSignup} style={styles.signupButton}>
-              <Text style={styles.signupText}>
-                Signup
-              </Text>
-              <Icon
-                name="log-in-outline"
-                size={30}
-                color="white"
-                style={{ marginLeft: 'auto', marginRight: 20 }}
-              />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => router.push('signin')} >
-              <Text style={styles.signInText}>
-                Already a user? Sign-in
-              </Text>
-            </TouchableOpacity>
+
+            {!pendingVerification && (
+              <View className="w-full mt-5">
+                <TextInput
+                  value={firstName}
+                  placeholder="First Name"
+                  onChangeText={setFirstName}
+                  className="border-b border-gray-400 py-2"
+                />
+                <TextInput
+                  value={lastName}
+                  placeholder="Last Name"
+                  onChangeText={setLastName}
+                  className="border-b border-gray-400 py-2"
+                />
+                <TextInput
+                  autoCapitalize="none"
+                  value={emailAddress}
+                  placeholder="Email"
+                  onChangeText={setEmailAddress}
+                  className="border-b border-gray-400 py-2"
+                />
+                <TextInput
+                  value={password}
+                  placeholder="Password"
+                  secureTextEntry={true}
+                  onChangeText={setPassword}
+                  className="border-b border-gray-400 py-2"
+                />
+                <TouchableOpacity
+                  onPress={onSignUpPress}
+                  className='flex-row items-center bg-teal-900 mt-10 rounded-2xl'
+                >
+                  <Text className='text-[13px] w-full font-bold text-white p-5 text-center'>
+                    Sign Up
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => router.push('signin')} >
+                  <Text className='text-[13px] text-center font-bold text-black p-5'>
+                    Already an Existing User?
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
+            {pendingVerification && (
+              <View className="w-full mt-5">
+                <TextInput
+                  value={code}
+                  placeholder="Verification Code"
+                  onChangeText={setCode}
+                  className="border-b border-gray-400 py-2"
+                />
+                <TouchableOpacity
+                  onPress={onPressVerify}
+                  className='flex-row items-center bg-teal-900 mt-10 rounded-2xl'
+                >
+                  <Text className='text-[13px] w-full font-bold text-white p-5 text-center'>
+                    Verify Email
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         </ScrollView>
+
         <StatusBar backgroundColor="#000000" style="light" />
-        <Text style={styles.footerText}>
-          www.digitalgita.com | www.cyberspacedigital.in {'\n'}
+
+        <Text className="text-xs font-light text-gray-700 mt-2 text-center pb-10">
+          www.digitalgita.com | www.cyberspacedigital.in {"\n"}
           &copy; 2024 Cyber Space Digital. All rights reserved.
         </Text>
       </SafeAreaView>
     </LinearGradient>
   );
 };
-
-const styles = StyleSheet.create({
-  logo: {
-    maxWidth: 280,
-    width: '100%',
-    height: 80,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginTop: 20,
-  },
-  input: {
-    width: '100%',
-    padding: 10,
-    marginVertical: 5,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 5,
-  },
-  signupButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'black',
-    marginTop: 10,
-    borderRadius: 20,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
-  },
-  signupText: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    width: 150,
-    textAlign: 'center',
-    color: 'white',
-  },
-  signInText: {
-    fontSize: 13,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: 'black',
-    padding: 5,
-  },
-  footerText: {
-    fontSize: 12,
-    fontWeight: 'normal',
-    textAlign: 'center',
-    color: 'gray',
-    marginTop: 20,
-  },
-});
 
 export default Signup;

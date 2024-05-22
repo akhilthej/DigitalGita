@@ -1,21 +1,18 @@
-
-import {  Tabs } from "expo-router";
+import { Tabs } from "expo-router";
 import { Image, Text, View } from "react-native";
 import { icons } from "../../constants";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const TabIcon = ({ icon, color, name, iconSize = 20, nameSize = 10 }) => {
+const TabIcon = ({ icon, color, name, iconSize = 25, nameSize = 10 }) => {
   return (
-    <View className="flex items-center justify-center gap-1">
+    <View style={{ alignItems: 'center', justifyContent: 'center', gap: 1 }}>
       <Image
         source={icon}
         resizeMode="contain"
         tintColor={color}
         style={{ width: iconSize, height: iconSize }}
       />
-      <Text
-        className='text-xs'
-        style={{ color: color, fontSize: nameSize }}
-      >
+      <Text style={{ color: color, fontSize: nameSize }}>
         {name}
       </Text>
     </View>
@@ -23,6 +20,8 @@ const TabIcon = ({ icon, color, name, iconSize = 20, nameSize = 10 }) => {
 };
 
 const TabLayout = () => {
+  const insets = useSafeAreaInsets();
+
   return (
     <>
       <Tabs
@@ -32,7 +31,8 @@ const TabLayout = () => {
           tabBarShowLabel: false,
           tabBarStyle: {
             backgroundColor: "#134e4a",
-            height: 90,
+            height: 50 + insets.bottom,  // Add safe area insets to height
+            paddingBottom: insets.bottom  // Ensure content is not cut off
           },
         }}
       >

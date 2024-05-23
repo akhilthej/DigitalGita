@@ -48,3 +48,29 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+
+
+For Offline Build .aab file
+npx react-native build-android --mode=release
+
+To clear Previous Build Files, in Android/App/Output
+gradlew clear
+
+to build android file
+npx expo run:android
+
+for expo apk file
+eas build -p android --profile preview
+
+for expo aab file
+eas build --platform android
+
+change code version in android/build.gradle
+versionCode 0.1
+
+add then in gradle.properties
+MYAPP_UPLOAD_STORE_FILE=digitalgita.keystore
+MYAPP_UPLOAD_KEY_ALIAS=digitalgita
+MYAPP_UPLOAD_STORE_PASSWORD=balasivaA1!
+MYAPP_UPLOAD_KEY_PASSWORD=balasivaA1!

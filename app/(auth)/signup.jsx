@@ -12,7 +12,7 @@ import { router } from 'expo-router';
 
 WebBrowser.maybeCompleteAuthSession();
 
-const Signup = () => {
+const signup = () => {
   useWarmUpBrowser();
   const navigation = useNavigation();
 
@@ -65,31 +65,31 @@ const Signup = () => {
   return (
     <LinearGradient
       colors={['#f9faf8', '#dbe9db']}
-      style={{ flex: 1 }}
+      className="flex-1"
     >
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView className="flex-1 mt-10">
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-          style={{ flex: 1 }}
+          className="flex-1"
         >
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-            <View className="w-full flex justify-center items-center px-4">
+            <View className="w-full justify-center items-center px-4">
               <Image
                 source={images.welcomescreenlogo}
-                className="max-w-[280px] w-full h-[298px]"
+                className="max-w-[280px] w-full h-[100px]"
                 resizeMode="contain"
               />
 
-              <View className="relative mt-5">
-                <Text className="text-[18px] text-black font-bold text-center">
+              <View>
+                <Text className="text-lg text-black font-bold text-center">
                   Let's Start
                 </Text>
-                <Text className="text-[24px] text-black font-bold text-center">
+                <Text className="text-xl text-black font-bold text-center">
                   Building your Brand
                 </Text>
               </View>
 
-              <Text className="text-xs text-gray-800 mt-2 text-center">
+              <Text className="text-xs text-gray-500 mt-2 text-center">
                 A Knowledge place for all your Digital Needs. {"\n"}
               </Text>
 
@@ -99,39 +99,43 @@ const Signup = () => {
                     value={firstName}
                     placeholder="First Name"
                     onChangeText={setFirstName}
-                    className="border-b border-gray-400 py-2"
+                    className="border-b border-gray-500 py-2 text-base text-black"
+                    placeholderTextColor="gray"
                   />
                   <TextInput
                     value={lastName}
                     placeholder="Last Name"
                     onChangeText={setLastName}
-                    className="border-b border-gray-400 py-2"
+                    className="border-b border-gray-500 py-2 text-base text-black mt-5"
+                    placeholderTextColor="gray"
                   />
                   <TextInput
                     autoCapitalize="none"
                     value={emailAddress}
                     placeholder="Email"
                     onChangeText={setEmailAddress}
-                    className="border-b border-gray-400 py-2"
+                    className="border-b border-gray-500 py-2 text-base text-black mt-5"
+                    placeholderTextColor="gray"
                   />
                   <TextInput
                     value={password}
                     placeholder="Password"
                     secureTextEntry={true}
                     onChangeText={setPassword}
-                    className="border-b border-gray-400 py-2"
+                    className="border-b border-gray-500 py-2 text-base text-black mt-5"
+                    placeholderTextColor="gray"
                   />
                   <TouchableOpacity
                     onPress={onSignUpPress}
-                    className='flex-row items-center bg-teal-900 mt-10 rounded-2xl'
+                    className="flex-row items-center bg-teal-800 mt-10 rounded-full"
                   >
-                    <Text className='text-[13px] w-full font-bold text-white p-5 text-center'>
+                    <Text className="text-xs w-full font-bold text-white py-3 text-center">
                       Sign Up
                     </Text>
                   </TouchableOpacity>
 
                   <TouchableOpacity onPress={() => router.push('signin')} >
-                    <Text className='text-[13px] text-center font-bold text-black p-5'>
+                    <Text className="text-xs text-center font-bold text-black py-3">
                       Already an Existing User?
                     </Text>
                   </TouchableOpacity>
@@ -144,13 +148,14 @@ const Signup = () => {
                     value={code}
                     placeholder="Verification Code"
                     onChangeText={setCode}
-                    className="border-b border-gray-400 py-2"
+                    className="border-b border-gray-500 py-2 text-base text-black"
+                    placeholderTextColor="gray"
                   />
                   <TouchableOpacity
                     onPress={onPressVerify}
-                    className='flex-row items-center bg-teal-900 mt-10 rounded-2xl'
+                    className="flex-row items-center bg-teal-800 mt-10 rounded-full"
                   >
-                    <Text className='text-[13px] w-full font-bold text-white p-5 text-center'>
+                    <Text className="text-xs w-full font-bold text-white py-3 text-center">
                       Verify Email
                     </Text>
                   </TouchableOpacity>
@@ -162,7 +167,7 @@ const Signup = () => {
 
         <StatusBar backgroundColor="#000000" style="light" />
 
-        <Text className="text-xs font-light text-gray-700 mt-2 text-center pb-10">
+        <Text className="text-xs font-light text-gray-500 mt-2 text-center pb-5">
           www.digitalgita.com | www.cyberspacedigital.in {"\n"}
           &copy; 2024 Cyber Space Digital. All rights reserved.
         </Text>
@@ -171,4 +176,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default signup;

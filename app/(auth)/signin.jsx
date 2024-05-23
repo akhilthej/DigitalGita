@@ -8,6 +8,7 @@ import { useSignIn } from "@clerk/clerk-expo";
 import * as WebBrowser from "expo-web-browser";
 import { useNavigation } from 'expo-router';
 import { useWarmUpBrowser } from "../../hooks/useWarmUpBrowser";
+import { router } from 'expo-router';
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -44,24 +45,24 @@ const SignIn = () => {
       colors={['#f9faf8', '#dbe9db']}
       style={{ flex: 1 }}
     >
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView className="flex-1 mt-10">
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           style={{ flex: 1 }}
         >
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View className="w-full flex justify-center items-center px-4">
-              <Image
+            <Image
                 source={images.welcomescreenlogo}
-                className="max-w-[280px] w-full h-[298px]"
+                className="max-w-[280px] w-full h-[100px]"
                 resizeMode="contain"
               />
 
               <View className="relative mt-5">
-                <Text className="text-[18px] text-black font-bold text-center">
+                <Text className="text-lg text-black font-bold text-center">
                   Welcome Back
                 </Text>
-                <Text className="text-[24px] text-black font-bold text-center">
+                <Text className="text-2xl text-black font-bold text-center">
                   Sign in to Your Account
                 </Text>
               </View>
@@ -76,27 +77,29 @@ const SignIn = () => {
                   value={emailAddress}
                   placeholder="Email"
                   onChangeText={setEmailAddress}
-                  className="border-b border-gray-400 py-2"
+                  className="border-b border-gray-400 py-3 text-lg text-black"
+                  placeholderTextColor="gray"
                 />
                 <TextInput
                   value={password}
                   placeholder="Password"
                   secureTextEntry={true}
                   onChangeText={setPassword}
-                  className="border-b border-gray-400 py-2"
+                  className="border-b border-gray-400 py-3 text-lg text-black mt-5"
+                  placeholderTextColor="gray"
                 />
                 {error && <Text className="text-red-500 mt-2 text-center">{error}</Text>}
                 <TouchableOpacity
                   onPress={onSignInPress}
                   className='flex-row items-center bg-teal-900 mt-10 rounded-2xl'
                 >
-                  <Text className='text-[13px] w-full font-bold text-white p-5 text-center'>
+                  <Text className='text-base w-full font-bold text-white py-4 text-center'>
                     Sign In
                   </Text>
                 </TouchableOpacity>
               </View>
               <TouchableOpacity onPress={() => router.push('signup')}>
-                <Text className='text-[13px] text-center font-bold text-black p-5'>
+                <Text className='text-base text-center font-bold text-black py-5'>
                   Create a new Account?
                 </Text>
               </TouchableOpacity>

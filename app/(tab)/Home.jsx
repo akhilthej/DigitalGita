@@ -17,6 +17,7 @@ export default function App() {
           <View>
             <ImageSlider />
             <ServicesList />
+            <ServicesList />
           </View>
         </ScrollView>
         

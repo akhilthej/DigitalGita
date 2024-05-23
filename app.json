@@ -2,7 +2,7 @@
   "expo": {
     "name": "DigitalGita",
     "slug": "DigitalGita",
-    "version": "1.0.0",
+    "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "digitalgita",
@@ -20,7 +20,9 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.cyberspacedigital.digitalgita"
+      "package": "com.cyberspacedigital.digitalgita",
+      "version": "0.0.1",
+      "versionCode": 2
     },
     "web": {
       "bundler": "metro",

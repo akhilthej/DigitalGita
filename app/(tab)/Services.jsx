@@ -2,8 +2,11 @@ import { View, Text, Image, ScrollView } from 'react-native';
 import React from 'react';
 import { SafeAreaView } from 'react-native';
 import ServicesCoverimage from '../../assets/images/coverimages/ServicesCoverimage.png';
-import Header from '../../components/homecomponents/Header';
+import Header from '../../components/homecomponents/Header.js';
 import { LinearGradient } from 'expo-linear-gradient';
+
+import DigitalMarketingServicesList from "../../components/servicecomponents/DigitalMarketingServicesList.js"
+import EventsServicesList from '../../components/servicecomponents/EventsServicesList.js'
 
 const Services = () => {
   return (
@@ -16,12 +19,13 @@ const Services = () => {
             <View className="flex-1">
               <Image 
                 source={ServicesCoverimage}
-                className="w-full h-60"
+                className="w-full h-40"
                 resizeMode="cover"
               />
-              <View className="p-4">
-                <Text className="text-2xl font-bold">Services</Text>
-                <Text className="text-lg mt-2">Here is the list of services we offer...</Text>
+
+              <View>
+                <DigitalMarketingServicesList/>
+                <EventsServicesList/>
               </View>
             </View>
             

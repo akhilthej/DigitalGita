@@ -12,7 +12,7 @@ import { router } from 'expo-router';
 
 WebBrowser.maybeCompleteAuthSession();
 
-const signup = () => {
+const Signup = () => {
   useWarmUpBrowser();
   const navigation = useNavigation();
 
@@ -24,27 +24,55 @@ const signup = () => {
   const [password, setPassword] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
+  const [error, setError] = useState("");
 
   const onSignUpPress = async () => {
     if (!isLoaded) {
       return;
     }
-  
+
+    // Client-side email validation
+    if (!validateEmail(emailAddress)) {
+      setError("Invalid email address");
+      return;
+    } else {
+      setError("");
+    }
+
     try {
-      await signUp.create({
-        firstName,
-        lastName,
-        emailAddress,
-        password,
+      const response = await fetch('https://digitalgita.cyberspacedigital.in/api/store_user.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          emailAddress,
+          password,
+        })
       });
-  
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
-      setPendingVerification(true);
+
+      const data = await response.json();
+
+      if (data.status === 'success') {
+        await signUp.create({
+          firstName,
+          lastName,
+          emailAddress,
+          password,
+        });
+
+        await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+        setPendingVerification(true);
+      } else {
+        setError(data.message); // Set error message received from the server
+      }
     } catch (err) {
       console.error("Sign-up error", err);
     }
   };
-  
+
   const onPressVerify = async () => {
     if (!isLoaded) {
       return;
@@ -60,6 +88,12 @@ const signup = () => {
     } catch (err) {
       console.error("Verification error", err);
     }
+  };
+
+  const validateEmail = (email) => {
+    // Simple email validation regex
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
   };
 
   return (
@@ -117,6 +151,13 @@ const signup = () => {
                     className="border-b border-gray-500 py-2 text-base text-black mt-5"
                     placeholderTextColor="gray"
                   />
+                  {error !== "" && (
+          <Text className="text-sm text-red-500 mt-2 text-center">
+            {error}
+          </Text>
+        )}
+
+
                   <TextInput
                     value={password}
                     placeholder="Password"
@@ -167,6 +208,7 @@ const signup = () => {
 
         <StatusBar backgroundColor="#000000" style="light" />
 
+        
         <Text className="text-xs font-light text-gray-500 mt-2 text-center pb-5">
           www.digitalgita.com | www.cyberspacedigital.in {"\n"}
           &copy; 2024 Cyber Space Digital. All rights reserved.
@@ -176,4 +218,4 @@ const signup = () => {
   );
 };
 
-export default signup;
+export default Signup;

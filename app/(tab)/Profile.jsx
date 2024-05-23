@@ -1,15 +1,22 @@
-import { View, Text, Image, TouchableOpacity, StatusBar } from 'react-native';
-import { SafeAreaView, ScrollView } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useUser, useAuth } from '@clerk/clerk-expo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
+
+import { router } from 'expo-router';
+
 
 const Profile = () => {
   const { user } = useUser();
   const { signOut } = useAuth();
   const insets = useSafeAreaInsets();
+
+  useEffect(() => {
+    console.log('User object:', user);
+  }, [user]);
 
   const handleLogout = async () => {
     try {
@@ -21,32 +28,50 @@ const Profile = () => {
     }
   };
 
+  // Access the user's email address
+  const userEmail = user?.primaryEmailAddress?.emailAddress || '';
+
   return (
     <LinearGradient
-      colors={['#f9faf8', '#dbe9db']} // Set your gradient colors here
-      style={{ flex: 1 }}
+      colors={['#f9faf8', '#dbe9db']}
+      className="flex-1"
     >
       <SafeAreaView style={{ flex: 1, paddingTop: insets.top }}>
         <ScrollView>
-          <View className="w-full flex justify-center items-center px-4">
-            <View className="flex flex-col items-center w-full justify-center bg-teal-800 rounded-xl p-4">
+          <View className="justify-center items-center px-4">
+            
+
+            <View className="flex flex-col items-center w-full bg-teal-800 rounded-xl p-4">
               <Image 
                 source={{ uri: user?.imageUrl }} 
                 className="rounded-full w-14 h-14"
               />
               <Text className="text-2xl font-bold text-white mt-2">{user?.fullName}</Text>
-              <Text className="text-md text-white mt-2">Phone Number</Text>
+              <Text className="text-md text-white mt-2">{userEmail}</Text>
+             
             </View>
 
-            <TouchableOpacity onPress={handleLogout} className='flex-row items-center bg-teal-900 mt-10 rounded-2xl p-3'>
-              <Text className='text-[13px] font-bold text-white'>
+            <TouchableOpacity onPress={() => router.push('settings')}  className="flex-row items-center bg-teal-900 mt-3 rounded-2xl p-3">
+              <Text className="text-[13px] font-bold text-white">
+                Settings
+              </Text>
+              <Icon
+                name="settings-outline"
+                size={30}
+                color='white'
+                style={{ marginLeft: 'auto', padding:2 }}
+              />
+            </TouchableOpacity>
+            
+            <TouchableOpacity onPress={handleLogout} className="flex-row items-center bg-teal-900 mt-3 rounded-2xl p-3">
+              <Text className="text-[13px] font-bold text-white">
                 Logout
               </Text>
               <Icon
                 name="log-in-outline"
                 size={30}
                 color='white'
-                style={{ marginLeft: 'auto', marginRight: 20 }}
+                style={{ marginLeft: 'auto', padding:2 }}
               />
             </TouchableOpacity>
           </View>

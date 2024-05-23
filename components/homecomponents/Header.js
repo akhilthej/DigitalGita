@@ -1,11 +1,31 @@
 import { View, Text, Image, TouchableOpacity, SafeAreaView, StyleSheet, Platform, StatusBar } from 'react-native';
-import React from 'react';
-import { useUser } from '@clerk/clerk-expo';
+import React, { useEffect, useState } from 'react';
+import { useAuth } from '../../hooks/AuthContext'; // Adjust the path if needed
 import { useRouter } from 'expo-router';
 
 const Header = () => {
-  const { user } = useUser();
+  const { user } = useAuth();
   const router = useRouter();
+  const [userInfo, setUserInfo] = useState(null);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      try {
+        const response = await fetch(`https://digitalgita.cyberspacedigital.in/api/CRUD.php?emailaddress=${user?.email}`);
+        const data = await response.json();
+        
+        if (data) {
+          setUserInfo(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch user info:", error);
+      }
+    };
+
+    if (user) {
+      fetchUserInfo();
+    }
+  }, [user]);
 
   const handleProfileNavigation = () => {
     router.push('/Profile');
@@ -16,7 +36,7 @@ const Header = () => {
       <View style={styles.header}>
         <TouchableOpacity onPress={handleProfileNavigation}>
           <Image
-            source={{ uri: user?.imageUrl }}
+            source={{ uri: userInfo?.imageUrl || 'https://via.placeholder.com/40' }} // Default image if userInfo or imageUrl is not available
             style={styles.profileImage}
           />
         </TouchableOpacity>
@@ -24,7 +44,7 @@ const Header = () => {
         <View style={styles.userInfo}>
           <TouchableOpacity onPress={handleProfileNavigation}>
             <Text style={styles.welcomeText}>Welcome</Text>
-            <Text style={styles.userName}>{user?.fullName}</Text>
+            <Text style={styles.userName}>{userInfo?.name || 'Loading'}</Text>
           </TouchableOpacity>
         </View>
       </View>

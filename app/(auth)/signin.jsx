@@ -4,39 +4,22 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { images } from '../../constants';
-import { useSignIn } from "@clerk/clerk-expo";
-import * as WebBrowser from "expo-web-browser";
-import { useNavigation } from 'expo-router';
-import { useWarmUpBrowser } from "../../hooks/useWarmUpBrowser";
+import { useAuth } from '../../hooks/AuthContext'; 
 import { router } from 'expo-router';
 
-WebBrowser.maybeCompleteAuthSession();
-
 const SignIn = () => {
-  useWarmUpBrowser();
-  const navigation = useNavigation();
-
-  const { signIn, setActive, isLoaded } = useSignIn();
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const { signIn } = useAuth();
 
   const onSignInPress = async () => {
-    if (!isLoaded) {
-      return;
-    }
+    const result = await signIn(emailAddress, password);
 
-    try {
-      const completeSignIn = await signIn.create({
-        identifier: emailAddress,
-        password,
-      });
-
-      await setActive({ session: completeSignIn.createdSessionId });
-
-      navigation.navigate('(tab)');
-    } catch (err) {
-      setError("Sign-in failed. Please check your credentials and try again.");
+    if (result.success) {
+      router.push('/Home');
+    } else {
+      setError(result.message);
     }
   };
 
@@ -52,7 +35,7 @@ const SignIn = () => {
         >
           <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
             <View className="w-full flex justify-center items-center px-4">
-            <Image
+              <Image
                 source={images.welcomescreenlogo}
                 className="max-w-[280px] w-full h-[100px]"
                 resizeMode="contain"

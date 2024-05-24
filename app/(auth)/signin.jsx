@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Image, ScrollView, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform } from 'react-native';
+import { ActivityIndicator, Image, ScrollView, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { LinearGradient } from 'expo-linear-gradient';
 import { images } from '../../constants';
 import { useAuth } from '../../hooks/AuthContext'; 
 import { router } from 'expo-router';
@@ -11,10 +10,13 @@ const SignIn = () => {
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { signIn } = useAuth();
 
   const onSignInPress = async () => {
+    setLoading(true);
     const result = await signIn(emailAddress, password);
+    setLoading(false);
 
     if (result.success) {
       router.push('/Home');
@@ -24,10 +26,7 @@ const SignIn = () => {
   };
 
   return (
-    <LinearGradient
-      colors={['#f9faf8', '#dbe9db']}
-      style={{ flex: 1 }}
-    >
+    <View className="flex flex-1">
       <SafeAreaView className="flex-1 mt-10">
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -75,10 +74,15 @@ const SignIn = () => {
                 <TouchableOpacity
                   onPress={onSignInPress}
                   className='flex-row items-center bg-teal-900 mt-10 rounded-2xl'
+                  disabled={loading}
                 >
-                  <Text className='text-base w-full font-bold text-white py-4 text-center'>
-                    Sign In
-                  </Text>
+                  {loading ? (
+                    <ActivityIndicator size="small" color="#FFFFFF" className='py-4' />
+                  ) : (
+                    <Text className='text-base w-full font-bold text-white py-4 text-center'>
+                      Sign In
+                    </Text>
+                  )}
                 </TouchableOpacity>
               </View>
               <TouchableOpacity onPress={() => router.push('signup')}>
@@ -97,7 +101,7 @@ const SignIn = () => {
           &copy; 2024 Cyber Space Digital. All rights reserved.
         </Text>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 

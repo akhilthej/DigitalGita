@@ -1,50 +1,32 @@
-import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, ScrollView, Text, TouchableOpacity, View } from 'react-native';
 import React from 'react';
-import { Redirect, router } from 'expo-router';
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons'; 
 import { images } from '../../constants';
-import { StatusBar } from 'expo-status-bar';
-import { LinearGradient } from 'expo-linear-gradient';
 
 const OnboardingScreen = () => {
   return (
-    <LinearGradient
-      colors={['#f9faf8',  '#dbe9db']} // Set your gradient colors here
-      style={{ flex: 1 }}
-    >
+    <View className='flex flex-1 bg-white' >
+    
       <SafeAreaView className='h-full'>
-        <ScrollView
-          contentContainerStyle={{
-            height: "100%",
-          }}
-        >
-          <View className="w-full flex justify-center items-center h-[85vh] px-4">
-            <View style={{ position: 'absolute', top: 50, left: 30 }}>
-              {/* Other content if needed */}
-            </View>
-
-            <Image
+        <ScrollView  className='top-0 h-full'>
+          <View className="w-full flex justify-center items-center h-[50vh]">
+          <Image
               source={images.welcomescreenlogo}
-              className="max-w-[280px] w-full h-[298px]"
-              resizeMode="contain"
-            />
+              className="max-w-[280px] w-full h-[250px]"
+              resizeMode="contain" />
 
-            <View className="relative mt-5">
-              <Text className="text-[18px]  text-black font-bold text-center">
+              <Text className="text-[18px] text-black font-bold text-center">
                 Let's Start
               </Text>
               <Text className="text-[24px] text-black font-bold text-center">
                 Building your Brand
               </Text>
-            </View>
-
-            <Text className="text-xs  text-gray-800 mt-2 text-center">
+              <Text className="text-xs  text-gray-800 text-center mt-2">
               A Knowledge place for all your Digital Needs. {"\n"}
             </Text>
-
-
-            <TouchableOpacity onPress={() => router.push('signup')} className='flex-row items-center bg-teal-900 mt-10 rounded-2xl'>
+            <TouchableOpacity onPress={() => router.push('signup')} className='flex-row drop-shadow-2xl max-w-[200px] mx-auto items-center bg-primary  rounded-2xl'>
               <Text className='text-[13px] w-[150px] text-center font-bold text-white p-5'>
                 Get Started
               </Text>
@@ -55,21 +37,26 @@ const OnboardingScreen = () => {
                 style={{ marginLeft: 'auto', marginRight: 20 }}
               />
             </TouchableOpacity>
+            </View>
 
-
-           
-
-          </View>
+            
+          
+          
         </ScrollView>
 
-        <StatusBar backgroundColor="#000000" style="light" />
+      
 
-        <Text className="text-xs font-light text-gray-700 mt-2 text-center pb-10">
-          www.digitalgita.com | www.cyberspacedigital.in {"\n"}
+        <Image source={images.welcomescreen}  className="absolute w-full h-[450px] -z-1 bottom-0"/>
+
+          
+        <Text className="text-xs font-light text-gray-700 mt-2 text-center font-pblack pb-10">
+          www.digitalgita.com{"\n"}
           &copy; 2024 Cyber Space Digital. All rights reserved.
         </Text>
+     
+
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 

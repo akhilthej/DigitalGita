@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Image, ScrollView, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
-import { LinearGradient } from 'expo-linear-gradient';
 import { images } from '../../constants';
 import { router } from 'expo-router';
 
@@ -46,10 +45,7 @@ const Signup = () => {
   };
 
   return (
-    <LinearGradient
-      colors={['#f9faf8', '#dbe9db']}
-      className="flex-1"
-    >
+    <View  className="flex-1" >
       <SafeAreaView className="flex-1 mt-10">
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -126,9 +122,16 @@ const Signup = () => {
                     {error}
                   </Text>
                 )}
+
+                <TouchableOpacity onPress={() => router.push('TermsConditions')} >
+                <Text className="text-xs text-center  text-black my-2">
+                ✓ I accept the following <Text className="text-xs text-center font-bold text-blue-400 my-2">Terms & Conditions </Text>
+                  </Text>
+                  </TouchableOpacity>
+
                 <TouchableOpacity
                   onPress={onSignUpPress}
-                  className="flex-row items-center bg-teal-800 mt-10 rounded-full"
+                  className="flex-row items-center bg-teal-800 mt-5 rounded-full"
                 >
                   <Text className="text-xs w-full font-bold text-white py-3 text-center">
                     Sign Up
@@ -136,7 +139,7 @@ const Signup = () => {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => router.push('signin')} >
-                  <Text className="text-xs text-center font-bold text-black py-3">
+                  <Text className="text-md text-center font-bold text-black mt-5">
                     Already an Existing User?
                   </Text>
                 </TouchableOpacity>
@@ -152,7 +155,7 @@ const Signup = () => {
           &copy; 2024 Cyber Space Digital. All rights reserved.
         </Text>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 };
 

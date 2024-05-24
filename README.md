@@ -69,8 +69,3 @@ eas build --platform android
 change code version in android/build.gradle
 versionCode 0.1
 
-add then in gradle.properties
-MYAPP_UPLOAD_STORE_FILE=digitalgita.keystore
-MYAPP_UPLOAD_KEY_ALIAS=digitalgita
-MYAPP_UPLOAD_STORE_PASSWORD=balasivaA1!
-MYAPP_UPLOAD_KEY_PASSWORD=balasivaA1!

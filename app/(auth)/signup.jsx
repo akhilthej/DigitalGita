@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Image, ScrollView, Text, TextInput, TouchableOpacity, View, KeyboardAvoidingView, Platform } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
+import { LinearGradient } from 'expo-linear-gradient';
 import { images } from '../../constants';
 import { router } from 'expo-router';
 
@@ -10,11 +11,12 @@ const Signup = () => {
   const [lastName, setLastName] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [sex, setSex] = useState("");
+  const [sex, setSex] = useState("Male"); // Default to "Male"
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   const onSignUpPress = async () => {
+    setError(""); // Reset error state before starting
     try {
       const response = await fetch('https://digitalgita.cyberspacedigital.in/api/CRUD.php', {
         method: 'POST',
@@ -31,22 +33,42 @@ const Signup = () => {
         })
       });
 
-      const data = await response.json();
+      const textResponse = await response.text(); // Get response text
+      console.log("Response status:", response.status); // Log response status
+      console.log("Response text:", textResponse); // Log response text for debugging
 
-      if (data.status === 'success') {
-        // Navigate to sign-in page upon successful signup
-        router.push('signin');
+      if (response.ok) {
+        if (textResponse) {
+          try {
+            const data = JSON.parse(textResponse); // Try to parse response as JSON
+            if (data.status === 'success') {
+              // Navigate to sign-in page upon successful signup
+              router.push('signin');
+            } else {
+              setError(data.message); // Set error message received from the server
+            }
+          } catch (jsonError) {
+            console.error("JSON parse error:", jsonError);
+            setError('An unexpected error occurred. Please try again.');
+          }
+        } else {
+          setError('Received empty response from the server.');
+        }
       } else {
-        setError(data.message); // Set error message received from the server
+        setError('Failed to sign up. Please try again.');
       }
     } catch (err) {
       console.error("Sign-up error", err);
+      setError('An error occurred. Please try again.');
     }
   };
 
   return (
-    <View  className="flex-1" >
-      <SafeAreaView className="flex-1 mt-10">
+    <LinearGradient
+      colors={['#f9faf8', '#dbe9db']}
+      className="flex-1"
+    >
+      <SafeAreaView className="flex-1">
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
           className="flex-1"
@@ -102,13 +124,7 @@ const Signup = () => {
                   className="border-b border-gray-500 py-2 text-base text-black mt-5"
                   placeholderTextColor="gray"
                 />
-                <TextInput
-                  value={sex}
-                  placeholder="Sex (Male/Female/Other)"
-                  onChangeText={setSex}
-                  className="border-b border-gray-500 py-2 text-base text-black mt-5"
-                  placeholderTextColor="gray"
-                />
+                {/* Removed the TextInput for "Sex" field */}
                 <TextInput
                   value={password}
                   placeholder="Password"
@@ -124,14 +140,14 @@ const Signup = () => {
                 )}
 
                 <TouchableOpacity onPress={() => router.push('TermsConditions')} >
-                <Text className="text-xs text-center  text-black my-2">
-                ✓ I accept the following <Text className="text-xs text-center font-bold text-blue-400 my-2">Terms & Conditions </Text>
+                  <Text className="text-xs text-center  text-black my-2">
+                    ✓ I accept the following <Text className="text-xs text-center font-bold text-blue-400 my-2">Terms & Conditions </Text>
                   </Text>
-                  </TouchableOpacity>
+                </TouchableOpacity>
 
                 <TouchableOpacity
                   onPress={onSignUpPress}
-                  className="flex-row items-center bg-teal-800 mt-5 rounded-full"
+                  className="flex-row items-center bg-teal-800 mt-2 rounded-full"
                 >
                   <Text className="text-xs w-full font-bold text-white py-3 text-center">
                     Sign Up
@@ -139,7 +155,7 @@ const Signup = () => {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => router.push('signin')} >
-                  <Text className="text-md text-center font-bold text-black mt-5">
+                  <Text className="text-xs text-center font-bold text-black py-3">
                     Already an Existing User?
                   </Text>
                 </TouchableOpacity>
@@ -155,7 +171,7 @@ const Signup = () => {
           &copy; 2024 Cyber Space Digital. All rights reserved.
         </Text>
       </SafeAreaView>
-    </View>
+    </LinearGradient>
   );
 };
 

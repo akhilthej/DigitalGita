@@ -53,6 +53,7 @@ Join our community of developers creating universal apps.
 
 For Offline Build .aab file
 npx react-native build-android --mode=release
+./gradlew bundleRelease
 
 To clear Previous Build Files, in Android/App/Output
 gradlew clear

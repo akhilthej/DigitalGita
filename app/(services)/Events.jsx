@@ -1,14 +1,19 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useRouter } from 'expo-router';
 
 const items = [
-  { name: 'Wedding', icon: 'balloon', route: 'Wedding' },
-  { name: 'Birthday', icon: 'cake', route: 'Wedding' },
+  { name: 'Wedding', icon: 'lamp', route: 'Wedding' },
+  { name: 'Birthday', icon: 'balloon', route: 'Wedding' },
   { name: 'Exhibition', icon: 'ticket', route: 'Wedding' },
   { name: 'Corporate', icon: 'briefcase', route: 'Wedding' },
 
+  { name: 'Religious', icon: 'church', route: 'Wedding' },
+  { name: 'Sports', icon: 'football', route: 'Wedding' },
+  { name: 'Entertainment', icon: 'ticket', route: 'Wedding' },
+  { name: 'Political', icon: 'flag', route: 'Wedding' },
+  
 ];
 
 // Helper function to split items into chunks of 4
@@ -20,19 +25,15 @@ const chunkItems = (items, size) => {
   return chunks;
 };
 
-const EventsServicesList = () => {
+const Events = () => {
   const router = useRouter(); // Get the router instance
   const chunkedItems = chunkItems(items, 4);
 
   return (
-    <View className="bg-teal-800 p-4 rounded-lg m-2">
-     <TouchableOpacity 
-        className='top-1 absolute right-1 p-2  bg-teal-900 rounded-lg'
-        onPress={() => router.push('Events')}  // You can add navigation functionality here
-      >
-        <Text  className=' text-white'>View More</Text>
-      </TouchableOpacity>
+    <SafeAreaView>
+    <ScrollView>
 
+    <View className="bg-teal-800 p-4 rounded-lg m-2">
       <Text className="text-white text-md mb-4">Events</Text>
       {chunkedItems.map((chunk, chunkIndex) => (
         <View key={chunkIndex} className="flex-row justify-between mb-4">
@@ -48,10 +49,13 @@ const EventsServicesList = () => {
           ))}
         </View>
       ))}
-     
     </View>
+
+
+    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 
-export default EventsServicesList;
+export default Events;

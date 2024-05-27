@@ -8,7 +8,7 @@ const AuthLayout = ({ }) => {
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#f4511e',
+          backgroundColor: '#00',
         },
         headerTintColor: '#fff',
         headerTitleStyle: {
@@ -21,6 +21,9 @@ const AuthLayout = ({ }) => {
         ),
       }}
     >
+    <Stack.Screen name='DigitalMarketing' options={{headerShown: true}}  />
+      <Stack.Screen name='Events' options={{headerShown: true}}  />
+
 
       <Stack.Screen name='(DigitalMarketing)' options={{headerShown: false}}  />
       <Stack.Screen name='(Events)' options={{headerShown: false}}  />

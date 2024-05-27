@@ -1,16 +1,26 @@
 import React from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, SafeAreaView, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useRouter } from 'expo-router';
+
 
 const items = [
   { name: 'FB Meta', icon: 'facebook', route: 'GoogleAds' },
   { name: 'Google Ads', icon: 'google-ads', route: 'GoogleAds' },
+  { name: 'YouTube', icon: 'youtube', route: 'GoogleAds' },
   { name: 'Google My Business', icon: 'google-my-business', route: 'GoogleAds' },
 
-  { name: 'YouTube', icon: 'youtube', route: 'GoogleAds' },
+  { name: 'SEO', icon: 'magnify', route: 'CreditScore' },
+  { name: 'Social Media Management', icon: 'account-group', route: 'BikeLoan' },
+  { name: 'Ecommerce Marketing', icon: 'shopping', route: 'MutualFundLoan' },
+  { name: 'Influencer Marketing', icon: 'account-star', route: 'HomeLoan' },
 
+  { name: 'Content Marketing', icon: 'file-document', route: 'CreditScore' },
+  { name: 'WhatsApp Marketing', icon: 'whatsapp', route: 'BikeLoan' },
+  { name: 'Affiliate Marketing', icon: 'account-multiple', route: 'MutualFundLoan' },
+  { name: 'Video Marketing', icon: 'video', route: 'HomeLoan' },
 ];
+
 
 // Helper function to split items into chunks of 4
 const chunkItems = (items, size) => {
@@ -21,21 +31,16 @@ const chunkItems = (items, size) => {
   return chunks;
 };
 
-const DigitalMarketingServicesList = () => {
+const DigitalMarketing = () => {
   const router = useRouter(); // Get the router instance
   const chunkedItems = chunkItems(items, 4);
 
   return (
+    <SafeAreaView>
+    <ScrollView>
+
     <View className="bg-teal-800 p-4 rounded-lg m-2">
-    <TouchableOpacity 
-        className='top-1 absolute right-1 p-2  bg-teal-900 rounded-lg'
-        onPress={() => router.push('DigitalMarketing')}  // You can add navigation functionality here
-      >
-        <Text  className=' text-white'>View More</Text>
-      </TouchableOpacity>
-
-
-      <Text className="text-white text-md mb-4">Digital Marketing</Text>
+      <Text className="text-white text-md mb-4">Events</Text>
       {chunkedItems.map((chunk, chunkIndex) => (
         <View key={chunkIndex} className="flex-row justify-between mb-4">
           {chunk.map((item, index) => (
@@ -51,8 +56,12 @@ const DigitalMarketingServicesList = () => {
         </View>
       ))}
     </View>
+
+
+    </ScrollView>
+    </SafeAreaView>
   );
 };
 
 
-export default DigitalMarketingServicesList;
+export default DigitalMarketing;

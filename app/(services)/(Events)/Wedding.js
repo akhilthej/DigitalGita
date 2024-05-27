@@ -90,14 +90,16 @@ const Wedding = () => {
   };
 
   return (
-    <SafeAreaView className="flex-1">
+    <View className="flex-1">
+     
+
+      <ScrollView>
       <Image
         source={images.WeddingCoverImage}
         className="w-full h-60"
         resizeMode="cover"
       />
-
-      <ScrollView>
+      
         <Text className="text-2xl font-bold mb-4 text-center">Request a Quotation for Wedding Services</Text>
 
         <TouchableOpacity onPress={handleSubmit} className='flex-row drop-shadow-2xl max-w-[200px] mx-auto items-center bg-primary rounded-2xl mt-5'>
@@ -108,7 +110,7 @@ const Wedding = () => {
 
         {message ? <Text className="text-green-600 font-bold mt-4 text-center">{message}</Text> : null}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 };
 

@@ -3,6 +3,8 @@ import React from 'react';
 import { TouchableOpacity, Text } from 'react-native';
 import { router } from 'expo-router';
 
+import Icon from 'react-native-vector-icons/Ionicons';
+
 const EventsLayout = ({ }) => {
   return (
     <Stack
@@ -16,8 +18,23 @@ const EventsLayout = ({ }) => {
         },
         headerLeft: () => (
           <TouchableOpacity  onPress={() => router.push('Services')}>
-            <Text style={{ color: '#fff', marginLeft: 15 }}>Back</Text>
+           <Icon
+    name="arrow-back"
+    size={30}
+    color='white'
+    style={{ marginLeft: 'auto' }}
+  />
           </TouchableOpacity>
+        ),
+        headerRight: () => (
+          <TouchableOpacity onPress={() => router.push('Help')} >
+  <Icon
+    name="help-circle-outline"
+    size={30}
+    color='white'
+    style={{ marginLeft: 'auto' }}
+  />
+</TouchableOpacity>
         ),
       }}
     >

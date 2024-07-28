@@ -57,8 +57,8 @@ const MyBusiness = () => {
   };
 
   const handleSave = async () => {
-    if (!email || !businessName) {
-      Alert.alert("Error", "User email and business name are required");
+    if (!businessName) {
+      Alert.alert("Error", "Business name is required");
       return;
     }
 
@@ -95,7 +95,6 @@ const MyBusiness = () => {
       Alert.alert("Success", "Business added successfully");
       fetchBusinesses(); // Refresh the list
       // Clear form after success
-      setEmail(user.email);
       setBusinessName("");
       setLocation("");
       setKeywords("");
@@ -107,11 +106,11 @@ const MyBusiness = () => {
   };
 
   const handleEdit = async () => {
-    if (!email || !businessName || !currentBusinessId) {
-      Alert.alert("Error", "ID, Email, and Business Name are required");
+    if (!businessName || !currentBusinessId) {
+      Alert.alert("Error", "ID and Business Name are required");
       return;
     }
-  
+
     const formData = {
       id: currentBusinessId,
       user_emailaddress: email,
@@ -119,7 +118,7 @@ const MyBusiness = () => {
       Target_Location: location,
       Target_Keywords: keywords,
     };
-  
+
     try {
       const response = await fetch(CRUD_MYBUSINESS, {
         method: "PUT",
@@ -128,18 +127,17 @@ const MyBusiness = () => {
           "Content-Type": "application/json",
         },
       });
-  
+
       const result = await response.json();
       if (!response.ok) {
         throw new Error(
           `HTTP error! Status: ${response.status} - ${result.error}`
         );
       }
-  
+
       Alert.alert("Success", "Business updated successfully");
       fetchBusinesses(); // Refresh the list
       // Clear form after success
-      setEmail(user.email);
       setBusinessName("");
       setLocation("");
       setKeywords("");
@@ -151,7 +149,6 @@ const MyBusiness = () => {
       Alert.alert("Error", `Failed to update business: ${error.message}`);
     }
   };
-  
 
   const handleDelete = async (id) => {
     try {
@@ -177,29 +174,24 @@ const MyBusiness = () => {
     }
   };
 
-  const handleEditInitiate = (item) => {
-    setEditMode(true);
-    setCurrentBusinessId(item.id);
-    setEmail(item.user_emailaddress);
-    setBusinessName(item.business_name);
-    setLocation(item.Target_Location);
-    setKeywords(item.Target_Keywords);
-    setLogo(null); // Assuming logo won't be changed on edit
-  };
-
   const renderItem = ({ item }) => {
-    const imageUri = item.business_logo;
+    const imageUri = item.business_logo; // This now contains the base64 data URI
 
     return (
       <View style={styles.item}>
-        <Text>Email: {item.user_emailaddress}</Text>
         <Text>Business Name: {item.business_name}</Text>
         <Text>Location: {item.Target_Location}</Text>
         <Text>Keywords: {item.Target_Keywords}</Text>
         <Image source={{ uri: imageUri }} style={styles.image} />
         <TouchableOpacity
           style={styles.editButton}
-          onPress={() => handleEditInitiate(item)}
+          onPress={() => {
+            setEditMode(true);
+            setCurrentBusinessId(item.id);
+            setBusinessName(item.business_name);
+            setLocation(item.Target_Location);
+            setKeywords(item.Target_Keywords);
+          }}
         >
           <Text style={styles.editButtonText}>Edit</Text>
         </TouchableOpacity>
@@ -213,31 +205,37 @@ const MyBusiness = () => {
     );
   };
 
+  const renderTwoItemsPerRow = ({ item, index }) => {
+    if (index % 2 === 0) {
+      return (
+        <View style={styles.row}>
+          {renderItem({ item })}
+          {businesses[index + 1] && renderItem({ item: businesses[index + 1] })}
+        </View>
+      );
+    }
+    return null; // Don't render the item directly if it's an odd index
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.label}>Email Address</Text>
-      <TextInput
-        style={styles.input}
-        value={email}
-        onChangeText={setEmail}
-        placeholder="Email Address"
-        keyboardType="email-address"
-      />
-      <Text style={styles.label}>Business Name</Text>
+      {editMode ? (
+        <Text style={styles.title}>Edit Business</Text>
+      ) : (
+        <Text style={styles.title}>Add Business</Text>
+      )}
       <TextInput
         style={styles.input}
         value={businessName}
         onChangeText={setBusinessName}
         placeholder="Business Name"
       />
-      <Text style={styles.label}>Location</Text>
       <TextInput
         style={styles.input}
         value={location}
         onChangeText={setLocation}
         placeholder="Location"
       />
-      <Text style={styles.label}>Keywords</Text>
       <TextInput
         style={styles.input}
         value={keywords}
@@ -248,14 +246,15 @@ const MyBusiness = () => {
       {logo && (
         <Image source={{ uri: logo.uri }} style={{ width: 200, height: 200 }} />
       )}
-      <Button
-        title={editMode ? "Update" : "Save"}
-        onPress={editMode ? handleEdit : handleSave}
-      />
+      {editMode ? (
+        <Button title="Update" onPress={handleEdit} />
+      ) : (
+        <Button title="Save" onPress={handleSave} />
+      )}
 
       <FlatList
         data={businesses}
-        renderItem={renderItem}
+        renderItem={renderTwoItemsPerRow}
         keyExtractor={(item) => item.id.toString()}
         style={styles.list}
       />
@@ -269,8 +268,9 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#fff",
   },
-  label: {
-    fontSize: 16,
+  title: {
+    fontSize: 20,
+    fontWeight: "bold",
     marginVertical: 10,
   },
   input: {
@@ -280,7 +280,12 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     paddingHorizontal: 10,
   },
+  row: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
   item: {
+    flex: 1,
     padding: 10,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",

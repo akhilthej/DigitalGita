@@ -5,16 +5,14 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const TabIcon = ({ icon, color, name, iconSize = 25, nameSize = 10 }) => {
   return (
-    <View style={{ alignItems: 'center', justifyContent: 'center', gap: 1 }}>
+    <View style={{ alignItems: "center", justifyContent: "center", gap: 1 }}>
       <Image
         source={icon}
         resizeMode="contain"
         tintColor={color}
         style={{ width: iconSize, height: iconSize }}
       />
-      <Text style={{ color: color, fontSize: nameSize }}>
-        {name}
-      </Text>
+      <Text style={{ color: color, fontSize: nameSize }}>{name}</Text>
     </View>
   );
 };
@@ -26,13 +24,12 @@ const TabLayout = () => {
     <>
       <Tabs
         screenOptions={{
-          tabBarActiveTintColor: "#14b8a6",
-          tabBarInactiveTintColor: "#CDCDE0",
+          tabBarActiveTintColor: "#0064e0",
+          tabBarInactiveTintColor: "#737373",
           tabBarShowLabel: false,
           tabBarStyle: {
-            backgroundColor: "#134e4a",
-            height: 50 + insets.bottom,  // Add safe area insets to height
-            paddingBottom: insets.bottom  // Ensure content is not cut off
+            backgroundColor: "#ffffff",
+            height: 64,
           },
         }}
       >
@@ -66,22 +63,22 @@ const TabLayout = () => {
             ),
           }}
         />
-         <Tabs.Screen
-          name="Wiki"
+        <Tabs.Screen
+          name="Grow"
           options={{
-            title: "Wiki",
+            title: "Grow",
             headerShown: false,
             tabBarIcon: ({ color, focused }) => (
               <TabIcon
                 icon={icons.book}
                 color={color}
-                name="Wiki"
+                name="Grow"
                 focused={focused}
               />
             ),
           }}
         />
-          <Tabs.Screen
+        <Tabs.Screen
           name="DealsOffers"
           options={{
             title: "DealsOffers",
@@ -96,7 +93,8 @@ const TabLayout = () => {
             ),
           }}
         />
-          <Tabs.Screen
+
+        <Tabs.Screen
           name="Profile"
           options={{
             title: "Profile",

@@ -73,7 +73,7 @@ const SignIn = () => {
                 {error && <Text className="text-red-500 mt-2 text-center">{error}</Text>}
                 <TouchableOpacity
                   onPress={onSignInPress}
-                  className='flex-row items-center bg-teal-900 mt-10 rounded-2xl'
+                  className='flex-row items-center bg-primary mt-10 rounded-2xl'
                   disabled={loading}
                 >
                   {loading ? (

@@ -13,7 +13,7 @@ const OnboardingScreen = () => {
           <View className="flex-1  items-center">
             <Image
               source={images.welcomescreenlogo}
-              className="max-w-[280px] w-full h-[250px]"
+              className="max-w-[280px] w-full h-[250px] rounded-xl"
               resizeMode="contain" 
             />
 

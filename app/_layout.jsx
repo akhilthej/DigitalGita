@@ -3,10 +3,6 @@ import { useEffect } from 'react';
 import { AuthProvider, useAuth } from '../hooks/AuthContext'; // Adjust the path if needed
 
 const InitialLayout = () => {
-
-
-
-
   const { user, loading } = useAuth();
   const segments = useSegments();
   const router = useRouter();

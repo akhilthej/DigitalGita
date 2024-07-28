@@ -3,13 +3,12 @@ import React from 'react';
 import { SafeAreaView } from 'react-native';
 import DealsOffersCoverimage from '../../assets/images/coverimages/DealsOffersCoverimage.png';
 import Header from '../../components/homecomponents/Header';
-import { LinearGradient } from 'expo-linear-gradient';
 
 const DealsOffers = () => {
   return (
     <>
       <Header />
-      <LinearGradient colors={['#f9faf8', '#dbe9db']} style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <SafeAreaView className="flex-1">
           <ScrollView>
             
@@ -27,7 +26,7 @@ const DealsOffers = () => {
             
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
+      </View>
     </>
   );
 };

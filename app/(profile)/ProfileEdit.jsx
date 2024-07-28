@@ -3,8 +3,11 @@ import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'reac
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../../hooks/AuthContext';
 import axios from 'axios';
+import { useRouter } from 'expo-router';
 
 const ProfileEdit = () => {
+  const router = useRouter();
+
   const { user, loading, setUser } = useAuth();
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -58,6 +61,11 @@ const ProfileEdit = () => {
       colors={['#f9faf8', '#dbe9db']}
       style={{ flex: 1 }}
     >
+
+<TouchableOpacity className='bg-primary-200 mt-10 p-5 text-center justify-center' onPress={() => router.push('Profile')}>
+          <Text style={styles.buttonText}>Exit</Text>
+        </TouchableOpacity>
+
       <View style={styles.container}>
         <Text style={styles.header}>Edit Profile</Text>
         <TextInput
@@ -108,6 +116,9 @@ const ProfileEdit = () => {
           <Text style={styles.buttonText}>{updating ? 'Updating...' : 'Update Profile'}</Text>
         </TouchableOpacity>
       </View>
+
+     
+
     </LinearGradient>
   );
 };

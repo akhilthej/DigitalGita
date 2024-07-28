@@ -8,16 +8,16 @@ const DigitalMarketingLayout = () => {
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#FF5B00',
+          backgroundColor: '#ffffff',
         },
-        headerTintColor: '#fff',
+        headerTintColor: '#000000',
         headerTitleStyle: {
           fontWeight: 'bold',
         },
         headerTitleAlign: 'center',
         headerLeft: () => (
           <TouchableOpacity onPress={() => router.push('Services')}>
-            <Text style={{ color: '#fff', marginLeft: 15 }}>Back</Text>
+            <Text style={{ color: '#000000', marginLeft: 15 }}>Back</Text>
           </TouchableOpacity>
         ),
       }}

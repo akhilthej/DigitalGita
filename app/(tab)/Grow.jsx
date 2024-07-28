@@ -3,15 +3,13 @@ import React from 'react';
 import { SafeAreaView } from 'react-native';
 import WikiCoverImage from '../../assets/images/coverimages/WikiCoverImage.png';
 import Header from '../../components/homecomponents/Header';
-import { LinearGradient } from 'expo-linear-gradient';
 
-import ServicesList from '../../components/wikicomponets/ServicesList'
 
-const Wiki = () => {
+const Grow = () => {
   return (
     <>
       <Header />
-      <LinearGradient colors={['#f9faf8', '#dbe9db']} style={{ flex: 1 }}>
+      <View style={{ flex: 1 }}>
         <SafeAreaView className="flex-1">
           <ScrollView>
             <View className="flex-1">
@@ -21,13 +19,12 @@ const Wiki = () => {
                 resizeMode="cover"
               />
             </View>
-            <ServicesList />
             
           </ScrollView>
         </SafeAreaView>
-      </LinearGradient>
+      </View>
     </>
   );
 };
 
-export default Wiki;
+export default Grow;

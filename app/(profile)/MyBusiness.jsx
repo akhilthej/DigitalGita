@@ -36,7 +36,8 @@ const MyBusiness = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      setBusinesses(data);
+      const userBusinesses = data.filter(business => business.user_emailaddress === email);
+      setBusinesses(userBusinesses);
     } catch (error) {
       console.error("Error fetching businesses: ", error);
       Alert.alert("Error", "Error fetching businesses");
@@ -310,6 +311,7 @@ const styles = StyleSheet.create({
     padding: 5,
     marginTop: 10,
   },
+
   deleteButtonText: {
     color: "#fff",
     textAlign: "center",

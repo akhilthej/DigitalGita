@@ -3,16 +3,17 @@ import {
   View,
   TextInput,
   Button,
-  StyleSheet,
   Text,
   Alert,
   Image,
   FlatList,
   TouchableOpacity,
+  Linking,
 } from "react-native";
 import { useAuth } from "../../hooks/AuthContext";
 import * as ImagePicker from "expo-image-picker";
 import { CRUD_MYBUSINESS } from "../../hooks/ApiHooks";
+import Icon from "react-native-vector-icons/FontAwesome";
 
 const MyBusiness = () => {
   const { user } = useAuth();
@@ -20,10 +21,15 @@ const MyBusiness = () => {
   const [businessName, setBusinessName] = useState("");
   const [location, setLocation] = useState("");
   const [keywords, setKeywords] = useState("");
+  const [facebookUrl, setFacebookUrl] = useState("");
+  const [instagramUrl, setInstagramUrl] = useState("");
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [linkedinUrl, setLinkedinUrl] = useState("");
   const [logo, setLogo] = useState(null);
   const [businesses, setBusinesses] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [currentBusinessId, setCurrentBusinessId] = useState(null);
+  const [showForm, setShowForm] = useState(false); // New state variable
 
   useEffect(() => {
     fetchBusinesses();
@@ -36,7 +42,9 @@ const MyBusiness = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
       const data = await response.json();
-      const userBusinesses = data.filter(business => business.user_emailaddress === email);
+      const userBusinesses = data.filter(
+        (business) => business.user_emailaddress === email
+      );
       setBusinesses(userBusinesses);
     } catch (error) {
       console.error("Error fetching businesses: ", error);
@@ -68,6 +76,10 @@ const MyBusiness = () => {
     formData.append("business_name", businessName);
     formData.append("Target_Location", location);
     formData.append("Target_Keywords", keywords);
+    formData.append("facebook_url", facebookUrl);
+    formData.append("instagram_url", instagramUrl);
+    formData.append("youtube_url", youtubeUrl);
+    formData.append("linkedin_url", linkedinUrl);
 
     if (logo) {
       formData.append("business_logo", {
@@ -99,72 +111,91 @@ const MyBusiness = () => {
       setBusinessName("");
       setLocation("");
       setKeywords("");
+      setFacebookUrl("");
+      setInstagramUrl("");
+      setYoutubeUrl("");
+      setLinkedinUrl("");
       setLogo(null);
+      setShowForm(false); // Hide form after saving
     } catch (error) {
       console.error("Error: ", error);
       Alert.alert("Error", `Failed to add business: ${error.message}`);
     }
   };
 
-  const handleEdit = async () => {
-    if (!businessName || !currentBusinessId) {
-      Alert.alert("Error", "ID and Business Name are required");
+  const handleUpdate = async (id) => {
+    if (!businessName) {
+      Alert.alert("Error", "Business name is required");
       return;
     }
 
-    const formData = {
-      id: currentBusinessId,
+    const updatedBusiness = {
+      id: id,
       user_emailaddress: email,
       business_name: businessName,
       Target_Location: location,
       Target_Keywords: keywords,
+      facebook_url: facebookUrl,
+      instagram_url: instagramUrl,
+      youtube_url: youtubeUrl,
+      linkedin_url: linkedinUrl,
     };
 
     try {
       const response = await fetch(CRUD_MYBUSINESS, {
         method: "PUT",
-        body: JSON.stringify(formData),
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify(updatedBusiness),
       });
 
-      const result = await response.json();
       if (!response.ok) {
-        throw new Error(
-          `HTTP error! Status: ${response.status} - ${result.error}`
-        );
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       Alert.alert("Success", "Business updated successfully");
       fetchBusinesses(); // Refresh the list
-      // Clear form after success
+      // Clear form and exit edit mode
       setBusinessName("");
       setLocation("");
       setKeywords("");
+      setFacebookUrl("");
+      setInstagramUrl("");
+      setYoutubeUrl("");
+      setLinkedinUrl("");
       setLogo(null);
       setEditMode(false);
       setCurrentBusinessId(null);
+      setShowForm(false); // Hide form after updating
     } catch (error) {
       console.error("Error: ", error);
       Alert.alert("Error", `Failed to update business: ${error.message}`);
     }
   };
 
+  const handleEdit = (business) => {
+    setEditMode(true);
+    setCurrentBusinessId(business.id);
+    setBusinessName(business.business_name);
+    setLocation(business.Target_Location);
+    setKeywords(business.Target_Keywords);
+    setFacebookUrl(business.facebook_url);
+    setInstagramUrl(business.instagram_url);
+    setYoutubeUrl(business.youtube_url);
+    setLinkedinUrl(business.linkedin_url);
+    setLogo({ uri: business.business_logo });
+    setShowForm(true); // Show form when editing
+  };
+
   const handleDelete = async (id) => {
     try {
       const response = await fetch(`${CRUD_MYBUSINESS}?id=${id}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
       });
 
-      const result = await response.json();
       if (!response.ok) {
-        throw new Error(
-          `HTTP error! Status: ${response.status} - ${result.error}`
-        );
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       Alert.alert("Success", "Business deleted successfully");
@@ -175,150 +206,159 @@ const MyBusiness = () => {
     }
   };
 
-  const renderItem = ({ item }) => {
-    const imageUri = item.business_logo; // This now contains the base64 data URI
+  const openURL = async (url) => {
+    const supported = await Linking.canOpenURL(url);
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      Alert.alert(`Don't know how to open this URL: ${url}`);
+    }
+  };
 
-    return (
-      <View style={styles.item}>
-        <Text>Business Name: {item.business_name}</Text>
-        <Text>Location: {item.Target_Location}</Text>
-        <Text>Keywords: {item.Target_Keywords}</Text>
-        <Image source={{ uri: imageUri }} style={styles.image} />
-        <TouchableOpacity
-          style={styles.editButton}
-          onPress={() => {
-            setEditMode(true);
-            setCurrentBusinessId(item.id);
-            setBusinessName(item.business_name);
-            setLocation(item.Target_Location);
-            setKeywords(item.Target_Keywords);
-          }}
-        >
-          <Text style={styles.editButtonText}>Edit</Text>
+  const renderBusiness = ({ item }) => (
+    <View className="flex-row items-center p-2 border-b border-gray-200">
+      {item.business_logo && (
+        <Image
+          source={{ uri: item.business_logo }}
+          className="w-16 h-16 mr-4"
+        />
+      )}
+      <View className="flex-1">
+        <Text className="text-lg font-bold">{item.business_name}</Text>
+        <Text className="text-sm text-gray-600">
+          Location: {item.Target_Location}
+        </Text>
+        <Text className="text-sm text-gray-600">
+          Keywords: {item.Target_Keywords}
+        </Text>
+        <View className="flex-row mt-2 space-x-4">
+          {item.facebook_url ? (
+            <TouchableOpacity onPress={() => openURL(item.facebook_url)}>
+              <Icon name="facebook" size={24} color="#4267B2" />
+            </TouchableOpacity>
+          ) : null}
+          {item.instagram_url ? (
+            <TouchableOpacity onPress={() => openURL(item.instagram_url)}>
+              <Icon name="instagram" size={24} color="#C13584" />
+            </TouchableOpacity>
+          ) : null}
+          {item.youtube_url ? (
+            <TouchableOpacity onPress={() => openURL(item.youtube_url)}>
+              <Icon name="youtube" size={24} color="#FF0000" />
+            </TouchableOpacity>
+          ) : null}
+          {item.linkedin_url ? (
+            <TouchableOpacity onPress={() => openURL(item.linkedin_url)}>
+              <Icon name="linkedin" size={24} color="#0077B5" />
+            </TouchableOpacity>
+          ) : null}
+        </View>
+      </View>
+
+      <View className="flex-col mt-2 ">
+        <TouchableOpacity onPress={() => handleEdit(item)}>
+          <Icon name="edit" size={24} color="#0077B5" />
+
+          <Text className="text-black font-bold">Edit</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.deleteButton}
-          onPress={() => handleDelete(item.id)}
-        >
-          <Text style={styles.deleteButtonText}>Delete</Text>
+        <TouchableOpacity onPress={() => handleDelete(item.id)}>
+          <Icon name="close" size={24} color="#ef4444" />
+          <Text className=" text-black font-bold">Delete</Text>
         </TouchableOpacity>
       </View>
-    );
-  };
 
-  const renderTwoItemsPerRow = ({ item, index }) => {
-    if (index % 2 === 0) {
-      return (
-        <View style={styles.row}>
-          {renderItem({ item })}
-          {businesses[index + 1] && renderItem({ item: businesses[index + 1] })}
-        </View>
-      );
-    }
-    return null; // Don't render the item directly if it's an odd index
-  };
+    </View>
+  );
 
   return (
-    <View style={styles.container}>
-      {editMode ? (
-        <Text style={styles.title}>Edit Business</Text>
-      ) : (
-        <Text style={styles.title}>Add Business</Text>
-      )}
-      <TextInput
-        style={styles.input}
-        value={businessName}
-        onChangeText={setBusinessName}
-        placeholder="Business Name"
+    <View className="flex-1 p-5">
+      <Button
+        title={showForm ? "Hide Form" : "+ Add Business"}
+        onPress={() => setShowForm(!showForm)}
       />
-      <TextInput
-        style={styles.input}
-        value={location}
-        onChangeText={setLocation}
-        placeholder="Location"
-      />
-      <TextInput
-        style={styles.input}
-        value={keywords}
-        onChangeText={setKeywords}
-        placeholder="Keywords"
-      />
-      <Button title="Pick a logo" onPress={pickImage} />
-      {logo && (
-        <Image source={{ uri: logo.uri }} style={{ width: 200, height: 200 }} />
-      )}
-      {editMode ? (
-        <Button title="Update" onPress={handleEdit} />
-      ) : (
-        <Button title="Save" onPress={handleSave} />
-      )}
+      {showForm && (
+        <>
+          <TextInput
+            placeholder="Business Name"
+            value={businessName}
+            onChangeText={setBusinessName}
+            className="h-10 border border-gray-300 mb-4 p-2"
+            placeholderTextColor="gray"
+          />
+          <TextInput
+            placeholder="Target Location"
+            value={location}
+            onChangeText={setLocation}
+            className="h-10 border border-gray-300 mb-4 p-2"
+            placeholderTextColor="gray"
+          />
+          <TextInput
+            placeholder="Target Keywords"
+            value={keywords}
+            onChangeText={setKeywords}
+            className="h-10 border border-gray-300 mb-4 p-2"
+            placeholderTextColor="gray"
+          />
+          <TextInput
+            placeholder="Facebook URL"
+            value={facebookUrl}
+            onChangeText={setFacebookUrl}
+            className="h-10 border border-gray-300 mb-4 p-2"
+            placeholderTextColor="gray"
+          />
+          <TextInput
+            placeholder="Instagram URL"
+            value={instagramUrl}
+            onChangeText={setInstagramUrl}
+            className="h-10 border border-gray-300 mb-4 p-2"
+            placeholderTextColor="gray"
+          />
+          <TextInput
+            placeholder="YouTube URL"
+            value={youtubeUrl}
+            onChangeText={setYoutubeUrl}
+            className="h-10 border border-gray-300 mb-4 p-2"
+            placeholderTextColor="gray"
+          />
+          <TextInput
+            placeholder="LinkedIn URL"
+            value={linkedinUrl}
+            onChangeText={setLinkedinUrl}
+            className="h-10 border border-gray-300 mb-4 p-2"
+            placeholderTextColor="gray"
+          />
 
+          <TouchableOpacity
+            className=" p-2  bg-[#0064e0] rounded-lg "
+            title="Pick a logo"
+            onPress={pickImage}
+          >
+            <Text className=" text-white text-center justify-center">
+              Pick a logo
+            </Text>
+          </TouchableOpacity>
+
+          {logo && (
+            <Image source={{ uri: logo.uri }} className="w-24 h-24 my-4" />
+          )}
+          {editMode ? (
+            <Button
+              title="Update Business"
+              onPress={() => handleUpdate(currentBusinessId)}
+            />
+          ) : (
+            <Button title="Add Business" onPress={handleSave} />
+          )}
+        </>
+      )}
       <FlatList
         data={businesses}
-        renderItem={renderTwoItemsPerRow}
+        renderItem={renderBusiness}
         keyExtractor={(item) => item.id.toString()}
-        style={styles.list}
+        className="flex-1 mt-5"
       />
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginVertical: 10,
-  },
-  input: {
-    height: 40,
-    borderColor: "gray",
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  item: {
-    flex: 1,
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-    marginBottom: 10,
-  },
-  image: {
-    width: 100,
-    height: 100,
-    marginTop: 10,
-  },
-  editButton: {
-    backgroundColor: "blue",
-    padding: 5,
-    marginTop: 10,
-  },
-  editButtonText: {
-    color: "#fff",
-    textAlign: "center",
-  },
-  deleteButton: {
-    backgroundColor: "red",
-    padding: 5,
-    marginTop: 10,
-  },
-
-  deleteButtonText: {
-    color: "#fff",
-    textAlign: "center",
-  },
-  list: {
-    marginTop: 20,
-  },
-});
 
 export default MyBusiness;

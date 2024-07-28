@@ -1,4 +1,4 @@
-rootProject.name = 'DigitalGita'
+rootProject.name = 'Brandify'
 
 dependencyResolutionManagement {
   versionCatalogs {

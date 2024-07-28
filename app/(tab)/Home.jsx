@@ -4,7 +4,7 @@ import ImageSlider from "../../components/ImageSlider";
 import Header from "../../components/homecomponents/Header";
 
 import DigitalMarketingServicesList from "../../components/servicecomponents/DigitalMarketingServicesList";
-import BusinessBar from "../../components/homecomponents/BusinessBar";
+
 
 export default function App() {
   return (
@@ -15,6 +15,7 @@ export default function App() {
         <SafeAreaView style={{ flex: 1 }}>
           <ScrollView>
             <View>
+
               <ImageSlider />
               <DigitalMarketingServicesList />
             </View>

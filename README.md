@@ -67,6 +67,6 @@ eas build -p android --profile preview
 for expo aab file
 eas build --platform android
 
-change code version in android/build.gradle
+change code version in android/build/build.gradle
 versionCode 0.1
 

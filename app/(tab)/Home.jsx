@@ -4,7 +4,6 @@ import ImageSlider from "../../components/ImageSlider";
 import Header from "../../components/homecomponents/Header";
 
 import DigitalMarketingServicesList from "../../components/servicecomponents/DigitalMarketingServicesList";
-import RecommendedPackages from "../../components/RecommendedPackages";
 
 
 export default function App() {
@@ -19,7 +18,6 @@ export default function App() {
 
               <ImageSlider />
               <DigitalMarketingServicesList />
-              <RecommendedPackages/>
             </View>
           </ScrollView>
         </SafeAreaView>

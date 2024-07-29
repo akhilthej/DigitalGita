@@ -5,11 +5,15 @@ import {
   FlatList,
   StyleSheet,
   ActivityIndicator,
+  TouchableOpacity,
 } from "react-native";
 import axios from "axios";
+import { useRouter } from 'expo-router';
 import { useAuth } from "../../hooks/AuthContext";
 
 const OrdersDigitalMarketing = () => {
+
+  const router = useRouter(); // Get the router instance
   const { user } = useAuth();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -51,6 +55,14 @@ const OrdersDigitalMarketing = () => {
   return (
     <View style={styles.container}>
       <Text>{user.email}</Text>
+
+      <TouchableOpacity
+        className=' p-2  bg-primary-200 rounded-lg '
+        onPress={() => router.push('OrderDetails')}  // You can add navigation functionality here
+      >
+        <Text  className=' text-white text-center justify-center'>View More</Text>
+      </TouchableOpacity>
+
       <FlatList
         data={orders}
         keyExtractor={(item) => item.id.toString()}

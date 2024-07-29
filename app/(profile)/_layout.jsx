@@ -58,6 +58,10 @@ const AuthLayout = ({}) => {
           
         }}
       />
+        <Stack.Screen
+        name="(orders)"
+        options={{ headerShown: false }}
+      />
     </Stack>
   );
 };

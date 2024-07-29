@@ -1,9 +1,8 @@
 import React from "react";
-import { SafeAreaView, ScrollView, View } from "react-native";
+import { SafeAreaView, ScrollView, Text, View } from "react-native";
 import ImageSlider from "../../components/ImageSlider";
 import Header from "../../components/homecomponents/Header";
 
-import DigitalMarketingServicesList from "../../components/servicecomponents/DigitalMarketingServicesList";
 
 
 export default function App() {
@@ -17,7 +16,7 @@ export default function App() {
             <View>
 
               <ImageSlider />
-              <DigitalMarketingServicesList />
+              <Text>Home</Text>
             </View>
           </ScrollView>
         </SafeAreaView>

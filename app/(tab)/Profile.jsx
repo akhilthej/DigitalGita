@@ -59,9 +59,8 @@ const Profile = () => {
                 className="rounded-full w-14 h-14"
               />
               <Text className="text-2xl font-bold text-black mt-2">{userInfo?.name || 'Guest'}</Text>
-              <View className='flex-row'>
+              <View className='flex-row space-x-2'>
               <Text className="text-md text-black mt-2">{userEmail}</Text>
-              <Text className="text-md text-black font-bold mt-2"> | </Text>
               <Text className="text-md text-black mt-2">{userPhonenumber}</Text>
               </View>
             </View>

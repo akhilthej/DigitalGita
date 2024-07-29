@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, ActivityIndicator, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, StyleSheet, ActivityIndicator } from "react-native";
 import axios from "axios";
 import { Link } from "expo-router";
 import { useAuth } from "../../../hooks/AuthContext";
 
 const OrdersDigitalMarketing = () => {
-  const { user } = useAuth();
+  const { user } = useAuth(); // Ensure user.email is available
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -57,7 +57,7 @@ const OrdersDigitalMarketing = () => {
             <Link
               href={{
                 pathname: '/OrderDetails',
-                params: { orderid: item.orderid }
+                params: { orderid: item.orderid, email: user.email }
               }}
               style={styles.button}
             >

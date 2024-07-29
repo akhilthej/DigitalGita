@@ -4,26 +4,27 @@ import { useLocalSearchParams } from "expo-router";
 import axios from "axios";
 
 const OrderDetails = () => {
-  const { orderid } = useLocalSearchParams(); // Get the orderid from the query parameters
+  const { orderid, email } = useLocalSearchParams(); // Get both orderid and email
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     console.log('Order ID:', orderid); // Log the orderid
+    console.log('Email:', email); // Log the email
 
-    if (orderid) {
+    if (orderid && email) {
       fetchOrderDetails();
     } else {
-      setError("No order ID provided");
+      setError("Missing parameters");
       setLoading(false);
     }
-  }, [orderid]);
+  }, [orderid, email]);
 
   const fetchOrderDetails = async () => {
     try {
       const response = await axios.get(
-        `https://digitalgita.cyberspacedigital.in/api/orders/digitalmarketing_orders_fetch.php?orderid=${orderid}`
+        `https://digitalgita.cyberspacedigital.in/api/orders/digitalmarketing_orders_fetch.php?orderid=${orderid}&email=${email}`
       );
       console.log('API Response:', response.data);
       setOrder(response.data[0]); // Assuming the response is an array

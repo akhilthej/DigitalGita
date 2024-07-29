@@ -68,6 +68,7 @@ const OrdersDigitalMarketing = () => {
         keyExtractor={(item) => item.id.toString()}
         renderItem={({ item }) => (
           <View style={styles.orderContainer}>
+          <Text>Order ID: {item.orderid}</Text>
             <Text style={styles.userEmail}>{item.user_emailaddress}</Text>
             <Text>Total Reach: {item.total_reach}</Text>
             <Text>Total Leads: {item.total_leads}</Text>

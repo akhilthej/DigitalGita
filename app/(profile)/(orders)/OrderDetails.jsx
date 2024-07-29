@@ -1,26 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import { useLocalSearchParams } from "expo-router";
 import axios from "axios";
-import { useParams } from 'expo-router'; // Import useParams
 
 const OrderDetails = () => {
-  const { id } = useParams(); // Access the id parameter from route
+  const { orderid } = useLocalSearchParams(); // Get the orderid from the query parameters
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (id) {
+    console.log('Order ID:', orderid); // Log the orderid
+
+    if (orderid) {
       fetchOrderDetails();
+    } else {
+      setError("No order ID provided");
+      setLoading(false);
     }
-  }, [id]);
+  }, [orderid]);
 
   const fetchOrderDetails = async () => {
     try {
       const response = await axios.get(
-        `https://digitalgita.cyberspacedigital.in/api/orders/digitalmarketing_order_details.php?id=${id}`
+        `https://digitalgita.cyberspacedigital.in/api/orders/digitalmarketing_orders_fetch.php?orderid=${orderid}`
       );
-      setOrder(response.data);
+      console.log('API Response:', response.data);
+      setOrder(response.data[0]); // Assuming the response is an array
     } catch (err) {
       setError(err.message);
     } finally {
@@ -30,7 +36,7 @@ const OrderDetails = () => {
 
   if (loading) {
     return (
-      <View style={styles.loader}>
+      <View style={styles.container}>
         <ActivityIndicator size="large" color="#0000ff" />
       </View>
     );
@@ -38,7 +44,7 @@ const OrderDetails = () => {
 
   if (error) {
     return (
-      <View style={styles.errorContainer}>
+      <View style={styles.container}>
         <Text style={styles.errorText}>Error: {error}</Text>
       </View>
     );
@@ -46,18 +52,36 @@ const OrderDetails = () => {
 
   if (!order) {
     return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>No order details available.</Text>
+      <View style={styles.container}>
+        <Text style={styles.errorText}>No order details available</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Order Details</Text>
-      <Text>User Email: {order.user_emailaddress}</Text>
-      <Text>Total Reach: {order.total_reach}</Text>
-      {/* Add more order details as needed */}
+      <Text style={styles.label}>Order ID:</Text>
+      <Text style={styles.value}>{order.orderid}</Text>
+      <Text style={styles.label}>Total Reach:</Text>
+      <Text style={styles.value}>{order.total_reach}</Text>
+      <Text style={styles.label}>Total Leads:</Text>
+      <Text style={styles.value}>{order.total_leads}</Text>
+      <Text style={styles.label}>Impressions:</Text>
+      <Text style={styles.value}>{order.impressions}</Text>
+      <Text style={styles.label}>Clicks:</Text>
+      <Text style={styles.value}>{order.clicks}</Text>
+      <Text style={styles.label}>Budget Used:</Text>
+      <Text style={styles.value}>INR {order.budget_used}</Text>
+      <Text style={styles.label}>Mobile:</Text>
+      <Text style={styles.value}>{order.device_mobile}</Text>
+      <Text style={styles.label}>Desktop:</Text>
+      <Text style={styles.value}>{order.device_desktop}</Text>
+      <Text style={styles.label}>Age Groups:</Text>
+      <Text style={styles.value}>{order.age_groups}</Text>
+      <Text style={styles.label}>Male:</Text>
+      <Text style={styles.value}>{order.gender_male}</Text>
+      <Text style={styles.label}>Female:</Text>
+      <Text style={styles.value}>{order.gender_female}</Text>
     </View>
   );
 };
@@ -67,24 +91,16 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  loader: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  label: {
+    fontWeight: "bold",
+    marginTop: 10,
   },
-  errorContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  value: {
+    marginBottom: 10,
   },
   errorText: {
     color: "red",
     fontSize: 18,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
   },
 });
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, Image, TouchableOpacity,ScrollView } from "react-native";
+import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { SafeAreaView } from "react-native";
 import WikiCoverImage from "../../assets/images/coverimages/WikiCoverImage.png";

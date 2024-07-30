@@ -88,15 +88,15 @@ android {
         applicationId 'com.cyberspacedigital.digitalgita'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
+        versionCode 5
         versionName "0.0.3"
     }
     signingConfigs {
         debug {
             storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+            storePassword 'balasivaA1!'
+            keyAlias 'digitalgita'
+            keyPassword 'balasivaA1!'
         }
     }
     buildTypes {

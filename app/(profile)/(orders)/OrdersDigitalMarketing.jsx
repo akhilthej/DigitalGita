@@ -72,7 +72,9 @@ const OrdersDigitalMarketing = () => {
           <View className="flex-row justify-between items-center p-4 border-b border-gray-300 mb-2">
             <View className="flex-1">
               <Text className="text-[14px] ">Packagename</Text>
-              <Text className="text-[14px] font-black">{item.package_name}</Text>
+              <Text className="text-[14px] font-black">
+                {item.package_name}
+              </Text>
               <Text className="text-[14px] ">Order ID:</Text>
               <Text className="text-[14px] font-black">{item.orderid}</Text>
 
@@ -111,6 +113,10 @@ const OrdersDigitalMarketing = () => {
                   View More
                 </Text>
               </Link>
+              <Text className="text-[12px] text-center">
+                Created on{"\n"}
+                {item.created_at}
+              </Text>
             </View>
           </View>
         )}

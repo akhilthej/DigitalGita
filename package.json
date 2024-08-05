@@ -34,6 +34,7 @@
     "react-native": "0.74.1",
     "react-native-animatable": "^1.4.0",
     "react-native-appwrite": "^0.2.2",
+    "react-native-calendars": "^1.1306.0",
     "react-native-gesture-handler": "~2.16.1",
     "react-native-image-picker": "^7.1.2",
     "react-native-loading-spinner-overlay": "^3.0.1",

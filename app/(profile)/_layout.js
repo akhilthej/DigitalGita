@@ -32,6 +32,15 @@ const AuthLayout = ({}) => {
         }}
       />
       <Stack.Screen
+        name="MyWebsites"
+        options={{
+          headerShown: true,
+          headerBackVisible: true,
+          title: 'My Websites',
+          
+        }}
+      />
+      <Stack.Screen
         name="ProfileEdit"
         options={{
           headerShown: true,
@@ -60,6 +69,10 @@ const AuthLayout = ({}) => {
       />
         <Stack.Screen
         name="(orders)"
+        options={{ headerShown: false }}
+      />
+       <Stack.Screen
+        name="(mywebsites)"
         options={{ headerShown: false }}
       />
     </Stack>

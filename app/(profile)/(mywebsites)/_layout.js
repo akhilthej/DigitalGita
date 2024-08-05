@@ -3,7 +3,7 @@ import React from "react";
 import { TouchableOpacity, Text } from "react-native";
 import { useRouter } from "expo-router";
 
-const DigitalMarketingLayout = () => {
+const MyWebsitesLayout = () => {
   const router = useRouter();
 
   return (
@@ -18,7 +18,7 @@ const DigitalMarketingLayout = () => {
         },
         headerTitleAlign: "center",
         headerLeft: () => (
-          <TouchableOpacity onPress={() => router.push("Services")}>
+          <TouchableOpacity onPress={() => router.push("Profile")}>
             <Text style={{ color: "#000000", marginLeft: 15 }}>Back</Text>
           </TouchableOpacity>
         ),
@@ -30,4 +30,4 @@ const DigitalMarketingLayout = () => {
   );
 };
 
-export default DigitalMarketingLayout;
+export default MyWebsitesLayout;

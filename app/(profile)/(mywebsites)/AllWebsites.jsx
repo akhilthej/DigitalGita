@@ -1,7 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, TextInput, Button, FlatList, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  FlatList,
+  ActivityIndicator,
+  Alert,
+} from "react-native";
 import axios from "axios";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { Link } from "expo-router";
 import { useAuth } from "../../../hooks/AuthContext"; // Adjust the path to your AuthContext
 
 const AllWebsites = () => {
@@ -47,10 +56,9 @@ const AllWebsites = () => {
   };
 
   const addUrl = async () => {
-    // Automatically add "https://" if missing
     let formattedUrl = url.trim();
     if (!formattedUrl.match(/^https?:\/\//)) {
-      formattedUrl = 'https://' + formattedUrl;
+      formattedUrl = "https://" + formattedUrl;
     }
 
     try {
@@ -64,6 +72,38 @@ const AllWebsites = () => {
     } catch (err) {
       alert(err.message);
     }
+  };
+
+  const deleteUrl = async (id) => {
+    try {
+      const response = await axios.post(
+        "https://digitalgita.cyberspacedigital.in/api/MyWebsites/delete_url.php",
+        { id, owner: user?.email }
+      );
+      alert(response.data.message);
+      fetchUrls();
+    } catch (err) {
+      alert(err.message);
+    }
+  };
+
+  const confirmDelete = (id) => {
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this URL?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Delete",
+          onPress: () => deleteUrl(id),
+          style: "destructive",
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
   if (loading) {
@@ -84,13 +124,6 @@ const AllWebsites = () => {
 
   return (
     <View className="flex-1 p-5">
-      <View className="flex flex-col items-center w-full rounded-xl drop-shadow-2xl">
-      
-        <View className="flex-row space-x-2">
-          <Text className="text-md text-black mt-2">{user?.email}</Text>
-        </View>
-      </View>
-
       <TextInput
         value={url}
         onChangeText={setUrl}
@@ -105,7 +138,15 @@ const AllWebsites = () => {
         renderItem={({ item }) => (
           <View className="p-4 border-b border-gray-300 flex-row justify-between items-center">
             <View>
-              <Text className="text-lg font-bold">{item.url}</Text>
+              <Link
+                href={{
+                  pathname: "/WebsiteDetails",
+                  params: { id: item.id, email: user.email },
+                }}
+                className="text-lg font-bold text-blue-500"
+              >
+                {item.url}
+              </Link>
               <Text className="text-sm text-gray-500">
                 Last Checked: {item.last_checked}
               </Text>
@@ -123,6 +164,11 @@ const AllWebsites = () => {
               >
                 {item.status}
               </Text>
+              <Button
+                title="X"
+                onPress={() => confirmDelete(item.id)}
+                color="red"
+              />
             </View>
           </View>
         )}
